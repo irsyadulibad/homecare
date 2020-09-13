@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 31 Bulan Mei 2020 pada 09.36
+-- Waktu pembuatan: 20 Bulan Mei 2020 pada 17.17
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -82914,21 +82914,13 @@ CREATE TABLE `invoice` (
   `desa` varchar(50) NOT NULL,
   `jam_kunjungan` time NOT NULL,
   `tgl_kunjungan` date NOT NULL,
-  `kondisi` varchar(200) NOT NULL,
+  `kondisi` longtext NOT NULL,
   `tgl_pesan` datetime NOT NULL,
   `biaya_lain` int(11) DEFAULT NULL,
-  `biaya_kirim` int(11) NOT NULL,
   `biaya_obat` int(11) NOT NULL,
   `total` int(11) NOT NULL,
   `id_medis` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `invoice`
---
-
-INSERT INTO `invoice` (`id_invoice`, `status`, `id_pengguna`, `nama`, `alamat`, `provinsi`, `kota`, `kecamatan`, `desa`, `jam_kunjungan`, `tgl_kunjungan`, `kondisi`, `tgl_pesan`, `biaya_lain`, `biaya_kirim`, `biaya_obat`, `total`, `id_medis`) VALUES
-(6, 'accepted', 2, 'pokas oka', 'Rahasia', '35', '3509', '3509020', '3509020001', '08:14:00', '2020-05-31', 'default.jpg', '2020-05-31 00:00:00', 0, 20000, 15000, 50000, 19);
 
 -- --------------------------------------------------------
 
@@ -82960,6 +82952,7 @@ INSERT INTO `komentar` (`id_komentar`, `id_pengguna`, `id_pesanan`, `rating`, `k
 
 CREATE TABLE `layanan` (
   `id_layanan` int(11) NOT NULL,
+  `id_obat` int(11) DEFAULT NULL,
   `jenis_layanan` varchar(255) NOT NULL,
   `keterangan` text NOT NULL,
   `harga` int(11) NOT NULL
@@ -82969,34 +82962,13 @@ CREATE TABLE `layanan` (
 -- Dumping data untuk tabel `layanan`
 --
 
-INSERT INTO `layanan` (`id_layanan`, `jenis_layanan`, `keterangan`, `harga`) VALUES
-(2, 'Pemeriksaan Luka', 'Khusus Wanita Jelek', 50000),
-(13, 'sakit gigi', 'sadx', 40001),
-(14, 'Perawatan Luka Ringan', 'asd', 40000),
-(15, 'Perawatan Lansia', 'Khusus Lansisa', 120000),
-(16, 'Pemeriksaan THT', '', 2000),
-(17, 'Pemeriksaan Tensi Darah', '', 25000);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `lay_ob`
---
-
-CREATE TABLE `lay_ob` (
-  `id` int(11) NOT NULL,
-  `id_layanan` int(11) NOT NULL,
-  `id_obat` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data untuk tabel `lay_ob`
---
-
-INSERT INTO `lay_ob` (`id`, `id_layanan`, `id_obat`) VALUES
-(18, 2, 1),
-(19, 2, 2),
-(22, 14, 2);
+INSERT INTO `layanan` (`id_layanan`, `id_obat`, `jenis_layanan`, `keterangan`, `harga`) VALUES
+(2, 1, 'Pemeriksaan Luka', 'Khusus Wanita Jelek', 50000),
+(13, 1, 'sakit gigi', 'sadx', 40001),
+(14, 2, 'Perawatan Luka Ringan', 'asd', 40000),
+(15, NULL, 'Perawatan Lansia', 'Khusus Lansisa', 120000),
+(16, NULL, 'Pemeriksaan THT', '', 2000),
+(17, NULL, 'Pemeriksaan Tensi Darah', '', 25000);
 
 -- --------------------------------------------------------
 
@@ -83016,32 +82988,8 @@ CREATE TABLE `obat` (
 --
 
 INSERT INTO `obat` (`id_obat`, `nama`, `stok`, `harga`) VALUES
-(1, 'Pharacetamol', 0, 10000),
-(2, 'Betadin', 0, 5000),
-(3, 'Obat1', 0, 5000),
-(4, 'Obat2', 0, 5000),
-(5, 'Obat3', 0, 5000);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `ongkir`
---
-
-CREATE TABLE `ongkir` (
-  `id` int(11) NOT NULL,
-  `id_provinsi` int(11) NOT NULL,
-  `id_kota` int(11) NOT NULL,
-  `id_kecamatan` int(11) NOT NULL,
-  `tarif` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data untuk tabel `ongkir`
---
-
-INSERT INTO `ongkir` (`id`, `id_provinsi`, `id_kota`, `id_kecamatan`, `tarif`) VALUES
-(3, 35, 3509, 3509020, 20000);
+(1, 'Pharacetamol', 15, 10000),
+(2, 'Betadin', 5, 5000);
 
 -- --------------------------------------------------------
 
@@ -83108,7 +83056,9 @@ INSERT INTO `pengguna` (`id_pengguna`, `nama_lengkap`, `nama_pengguna`, `passwor
 (32, 'Dr Irawan Setiawan', 'setiawan', '88ea39439e74fa27c09a4fc0bc8ebe6d00978392', '087888871272', 1, 'setiawanirawarn@gmail.com', '', 2, '', 0, ''),
 (33, 'abangjoe', 'abangjx', '88ea39439e74fa27c09a4fc0bc8ebe6d00978392', '8788861622', 1, 'abanganjr21@gmail.com', 'default.jpg', 3, '', 0, ''),
 (34, 'abangalex', 'abangajos', 'Fery1212', '', 0, 'antosadhi@gmail.com', 'default.jpg', 3, 'BPwZTUEOhfRr', 1, ''),
-(45, 'Rahasia', 'rahasia', '829b36babd21be519fa5f9353daf5dbdb796993e', '', 0, 'rahasia@gmail.com', 'default.jpg', 3, 'ziaBfVhuyIQ9', 0, '');
+(40, 'Irsyadul Ibad', 'mantap', 'b8e304bfd903e48d6b0a22777eaaff96401b000f', '', 0, 'ahmadirsyadulibad8@gmail.com', 'default.jpg', 3, 'kBhD5rVncW7K', 0, ''),
+(42, 'Ahmad Irsyadul Ibad', 'ibad', 'fc10025eae54954825f860e99194853b5b829a0f', '+6288217261702', 1, 'ahmadirsyadulibad7@gmail.com', 'default.jpg', 2, '', 0, ''),
+(44, 'Ahmad Irsyadul Ibad', 'secret', '829b36babd21be519fa5f9353daf5dbdb796993e', '+6288217261702', 1, 'ahmadirsyadulibad77@gmail.com', 'default.jpg', 2, '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -83128,13 +83078,8 @@ CREATE TABLE `pesanan_obat` (
 --
 
 INSERT INTO `pesanan_obat` (`id`, `id_invoice`, `id_obat`, `qty`) VALUES
-(26, 4, 1, 3),
-(27, 4, 2, 2),
-(28, 4, 3, 1),
-(29, 4, 4, 1),
-(33, 6, 1, 1),
-(34, 6, 2, 2),
-(35, 6, 5, 1);
+(3, 1, 1, 2),
+(4, 1, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -83152,7 +83097,6 @@ CREATE TABLE `riwayat` (
   `jam_kunjungan` time NOT NULL,
   `tgl_pesan` datetime NOT NULL,
   `biaya_lain` int(11) NOT NULL,
-  `biaya_kirim` int(11) NOT NULL,
   `total` int(11) NOT NULL,
   `id_medis` int(11) NOT NULL,
   `review` int(11) DEFAULT NULL
@@ -83162,9 +83106,8 @@ CREATE TABLE `riwayat` (
 -- Dumping data untuk tabel `riwayat`
 --
 
-INSERT INTO `riwayat` (`id_riwayat`, `id_invoice`, `id_pengguna`, `nama`, `alamat`, `tgl_kunjungan`, `jam_kunjungan`, `tgl_pesan`, `biaya_lain`, `biaya_kirim`, `total`, `id_medis`, `review`) VALUES
-(10, 3, 2, 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR', '2020-05-27', '10:44:00', '2020-05-27 00:00:00', 5000, 20000, 55000, 19, 1),
-(11, 4, 2, 'pokas oka', 'Rahasia - KEPANJEN - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR', '2020-05-30', '02:23:00', '2020-05-30 00:00:00', 20000, 20000, 140000, 19, NULL);
+INSERT INTO `riwayat` (`id_riwayat`, `id_invoice`, `id_pengguna`, `nama`, `alamat`, `tgl_kunjungan`, `jam_kunjungan`, `tgl_pesan`, `biaya_lain`, `total`, `id_medis`, `review`) VALUES
+(5, 1, 2, 'pokas oka', 'Rahasia - GILIMANUK - MELAYA - KABUPATEN JEMBRANA - BALI', '2002-12-02', '13:14:00', '2020-05-20 21:32:35', 15000, 235002, 19, 3);
 
 -- --------------------------------------------------------
 
@@ -83198,10 +83141,9 @@ CREATE TABLE `tb_pesanan` (
 -- Dumping data untuk tabel `tb_pesanan`
 --
 
-INSERT INTO `pesanan` (`id_pes`, `id_invoice`, `id_layanan`, `nama_layanan`, `jumlah`, `harga`, `pilihan`) VALUES
-(30, 4, 2, 'Pemeriksaan Luka', 1, 50000, ''),
-(31, 4, 14, 'Perawatan Luka Ringan', 1, 40000, ''),
-(33, 6, 2, 'Pemeriksaan Luka', 1, 50000, '');
+INSERT INTO `tb_pesanan` (`id_pes`, `id_invoice`, `id_layanan`, `nama_layanan`, `jumlah`, `harga`, `pilihan`) VALUES
+(3, 1, 13, 'sakit gigi', 2, 40001, ''),
+(4, 1, 14, 'Perawatan Luka Ringan', 3, 40000, '');
 
 -- --------------------------------------------------------
 
@@ -83226,18 +83168,7 @@ CREATE TABLE `ulasan` (
 --
 
 INSERT INTO `ulasan` (`id_ulasan`, `id_invoice`, `id_pengguna`, `id_medis`, `time`, `rating`, `deskripsi`, `nama`, `alamat`) VALUES
-(1, 3, 2, 19, '2020-05-27 05:54:51', 5, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(2, 3, 2, 19, '2020-05-27 05:54:51', 4, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(3, 3, 2, 19, '2020-05-27 05:54:51', 3, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(4, 3, 2, 19, '2020-05-27 05:54:51', 2, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(5, 3, 2, 19, '2020-05-27 05:54:51', 1, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(6, 3, 2, 19, '2020-05-27 05:54:51', 5, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(7, 3, 2, 19, '2020-05-27 05:54:51', 4, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(8, 3, 2, 19, '2020-05-27 05:54:51', 3, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(9, 3, 2, 19, '2020-05-27 05:54:51', 2, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(10, 3, 2, 19, '2020-05-27 05:54:51', 4, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(11, 3, 2, 19, '2020-05-27 05:54:51', 2, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR'),
-(12, 3, 2, 19, '2020-05-27 05:54:51', 5, 'Layanannya baik sekali, good lah tingkatkan terus\r\nMedisnya sangat baik', 'pokas oka', 'Konoha - TEMBOKREJO - GUMUK MAS - KABUPATEN JEMBER - JAWA TIMUR');
+(3, 1, 2, 19, '2020-05-20 16:32:42', 5, 'Mantap Pelayanannya, terus tingkatkan!', 'pokas oka', 'Rahasia - GILIMANUK - MELAYA - KABUPATEN JEMBRANA - BALI');
 
 --
 -- Indexes for dumped tables
@@ -83299,25 +83230,14 @@ ALTER TABLE `komentar`
 -- Indeks untuk tabel `layanan`
 --
 ALTER TABLE `layanan`
-  ADD PRIMARY KEY (`id_layanan`);
-
---
--- Indeks untuk tabel `lay_ob`
---
-ALTER TABLE `lay_ob`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_layanan`),
+  ADD KEY `ob_ly` (`id_obat`);
 
 --
 -- Indeks untuk tabel `obat`
 --
 ALTER TABLE `obat`
   ADD PRIMARY KEY (`id_obat`);
-
---
--- Indeks untuk tabel `ongkir`
---
-ALTER TABLE `ongkir`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `pasien`
@@ -83370,7 +83290,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT untuk tabel `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `id_invoice` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_invoice` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `komentar`
@@ -83385,22 +83305,10 @@ ALTER TABLE `layanan`
   MODIFY `id_layanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT untuk tabel `lay_ob`
---
-ALTER TABLE `lay_ob`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
-
---
 -- AUTO_INCREMENT untuk tabel `obat`
 --
 ALTER TABLE `obat`
-  MODIFY `id_obat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT untuk tabel `ongkir`
---
-ALTER TABLE `ongkir`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_obat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `pasien`
@@ -83412,31 +83320,31 @@ ALTER TABLE `pasien`
 -- AUTO_INCREMENT untuk tabel `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT untuk tabel `pesanan_obat`
 --
 ALTER TABLE `pesanan_obat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `riwayat`
 --
 ALTER TABLE `riwayat`
-  MODIFY `id_riwayat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_riwayat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_pesanan`
 --
 ALTER TABLE `tb_pesanan`
-  MODIFY `id_pes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_pes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `ulasan`
 --
 ALTER TABLE `ulasan`
-  MODIFY `id_ulasan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_ulasan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
