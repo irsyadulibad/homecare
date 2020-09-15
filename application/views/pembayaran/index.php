@@ -17,7 +17,7 @@
 			<?php foreach ($invoices as $invoice): ?>
 				<tr>
 					<td><?= $i++; ?></td>
-					<td><?= $invoice['nama']; ?></td>
+					<td><?= $this->fungsi->get_user($invoice['id_pengguna'])->nama_lengkap; ?></td>
 					<td><?= $invoice['tgl_kunjungan']; ?></td>
 					<td>Rp.<?= number_format($invoice['total'] + $invoice['biaya_lain'] + $invoice['biaya_obat'] + $invoice['biaya_kirim'], 0, ',', '.'); ?></td>
 					<td>

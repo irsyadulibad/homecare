@@ -1,13 +1,12 @@
 <?php
- 
+
 class Cart extends CI_Controller{
-     
+
     function __construct(){
         parent::__construct();
         $this->load->model('cart_model');
         $this->load->model('pesanan_m');
         $this->load->model('layanan_m');
-        $this->load->model('pasien_m');
         $this->load->model('user_m');
         $this->load->model('model_invoice');
         $this->load->model('obat_m');
@@ -16,7 +15,7 @@ class Cart extends CI_Controller{
         $this->load->model('dropdown_chained_model','model');
         check_not_login();
     }
- 
+
     function index(){
         $data['data']=$this->cart_model->get_all_produk();
         $data['modal'] = 'cart';
@@ -24,7 +23,7 @@ class Cart extends CI_Controller{
         $data['cart'] = $this->cart_model->destruct_cart();
         $this->template->load('template2','cart/v_cart',$data);
     }
- 
+
     function add_to_cart(){ //fungsi Add To Cart
         $id = $this->input->post('id_layanan');
         $layanan = $this->cart_model->get_layanan($id);
@@ -42,7 +41,7 @@ class Cart extends CI_Controller{
             echo json_encode(['status' => 'failed', 'msg' => 'Produk tidak ditemukan']);
         }
     }
- 
+
     public function destroy(){
         $this->cart->destroy();
         $this->session->unset_userdata('obat');
@@ -52,12 +51,12 @@ class Cart extends CI_Controller{
         var_dump($this->cart->contents());
         var_dump($this->session->userdata('obat'));
     }
- 
+
     public function load_cart(){
         $string = $this->cart_model->show();
         echo $string;
     }
- 
+
     function hapus_cart(){ //fungsi untuk menghapus item cart
         $res = $this->cart_model->delete();
         echo $res;
@@ -67,7 +66,6 @@ class Cart extends CI_Controller{
             $this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Keranjang belanja masih kosong']);
             redirect('cart');
         }
-        $this->form_validation->set_rules('id_pasien', 'Pasien', 'required');
         $this->form_validation->set_rules('tgl_kunjungan', 'Tgl Kunjungan', 'required');
         $this->form_validation->set_rules('jam_kunjungan', 'Jam Kunjungan', 'required');
         $this->form_validation->set_rules('alamat', 'Alamat', 'required');
@@ -79,8 +77,8 @@ class Cart extends CI_Controller{
         if($this->form_validation->run() == false){
             $data['provinsi'] = $this->model->get_provinsi();
             $data['layanan'] = $this->layanan_m->getlay();
+            $data['user'] = $this->fungsi->user_login();
             $id = $this->fungsi->user_login()->id_pengguna;
-            $data ['pasien'] = $this->pasien_m->getpasuser($id);
             $data['head'] = "Checkout Pesanan";
             $this->template->load('template2','cart/bayar',$data);
         }else{

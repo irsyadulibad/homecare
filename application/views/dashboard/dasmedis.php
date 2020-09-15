@@ -31,7 +31,7 @@
 	</div>
 </div>
 <div class="row justify-content-center">
-	<div class="col-md-6">
+	<div class="col-md-10">
 		<div class="card">
 			<div class="card-header">
 				<h4>Pending Invoice</h4>
@@ -56,7 +56,7 @@
 							<?php foreach($pending_invoice as $pi): $i++; ?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $pi['nama']; ?></td>
+								<td><?= $this->fungsi->get_user($pi['id_pengguna'])->nama_lengkap; ?></td>
 								<td><?= $pi['tgl_kunjungan']; ?></td>
 								<td><?= $pi['jam_kunjungan']; ?></td>
 								<td><?= $pi['alamat']; ?></td>

@@ -4,13 +4,8 @@
       <div class="card-body">
         <?= form_open_multipart(); ?>
         <div class="form-group">
-          <label for="id_pasien">Pilih Pasien</label>
-          <select name="id_pasien" id="id_pasien" class="form-control">
-            <option value="">--Pilih Pasien--</option>
-          <?php foreach($pasien->result() as $pas): ?>
-            <option value="<?= $pas->nama_lengkap."|".$pas->id_pasien; ?>"><?= $pas->nama_lengkap; ?></option>
-          <?php endforeach; ?>
-          </select>
+          <label for="id_pasien">Nama Pasien</label>
+          <input type="text" class="form-control" value="<?= $user->nama_lengkap; ?>" disabled>
           <small class="text-danger"><?= form_error('id_pasien'); ?></small>
         </div>
         <div class="form-group">
@@ -39,9 +34,9 @@
           <label for="">Pilih Provinsi</label>
           <select name="provinsi" id="provinsi" class="form-control">
             <option value="">Pilih Provinsi</option>
-          <?php foreach($provinsi->result() as $prov): ?>
-            <option value="<?= $prov->id_provinsi; ?>"><?= $prov->nama; ?></option>
-          <?php endforeach; ?>
+            <?php foreach($provinsi->result() as $prov): ?>
+              <option value="<?= $prov->id_provinsi; ?>"><?= $prov->nama; ?></option>
+            <?php endforeach; ?>
           </select>
           <small class="text-danger"><?= form_error('provinsi'); ?></small>
         </div>
@@ -73,8 +68,8 @@
           <button type="button" class="btn btn-info coverage-check"><i class="fas fa-exclamation-circle"></i> Cek Ketersediaan</button>
           <button class="btn btn-success float-right" type="submit"><i class="fas fa-check"></i> Simpan</button>
         </div>
-        </form>
-      </div>
+      </form>
     </div>
   </div>
+</div>
 </div>

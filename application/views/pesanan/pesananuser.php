@@ -45,8 +45,8 @@ function badge($status){
 						<?php else: $i = 0; ?>
 							<?php foreach($pesanans as $pesanan): $i++;?>
 							<tr>
-								<td><?= $i; ?></td>
-								<td><?= $pesanan['nama']; ?></td>
+								<td><?= $i; ?></td></td>
+								<td><?= $user->nama_lengkap; ?></td>
 								<td><?= $pesanan['tgl_kunjungan']; ?></td>
 								<td><?= $pesanan['jam_kunjungan']; ?></td>
 								<td><?= $pesanan['alamat']; ?></td>

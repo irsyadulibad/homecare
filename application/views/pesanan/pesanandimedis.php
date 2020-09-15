@@ -45,7 +45,7 @@ function badge($status){
 							<?php foreach($pesanans as $pesanan): $i++;?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $pesanan['nama']; ?></td>
+								<td><?= $this->fungsi->get_user($pesanan['id_pengguna'])->nama_lengkap; ?></td>
 								<td><?= $pesanan['tgl_kunjungan']; ?></td>
 								<td><?= $pesanan['jam_kunjungan']; ?></td>
 								<td><?= $pesanan['alamat']; ?></td>

@@ -11,4 +11,10 @@ Class Fungsi {
         $user_data=$this->ci->user_m->get($user_id)->row();
         return $user_data;
     }
+
+    function get_user($id){
+    	$this->ci->load->model('user_m');
+    	$user_data=$this->ci->user_m->get($id)->row();
+      return $user_data;
+    }
 }

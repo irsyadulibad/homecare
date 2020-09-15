@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<h4>Riwayat Pesanan</h4>
 
-	<h6 class="text-muted font-weight-bold mt-4">NAMA<span class="ml-3 mr-2">:</span><?= strtoupper($riwayat['nama']); ?></h6>
+	<h6 class="text-muted font-weight-bold mt-4">NAMA<span class="ml-3 mr-2">:</span><?= strtoupper($this->fungsi->get_user($riwayat['id_pengguna'])->nama_lengkap); ?></h6>
     <h6 class="text-muted font-weight-bold">ALAMAT<span class="ml-2 mr-2">:</span><?= $riwayat['alamat']; ?></h6>
     <h6 class="text-muted font-weight-bold">MEDIS<span class="ml-2 mr-2">:</span><?= strtoupper($medis['nama_lengkap']); ?></h6>
 	<table class="table table-bordered table-striped mt-4">

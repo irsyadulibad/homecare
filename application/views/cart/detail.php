@@ -1,4 +1,5 @@
 <?php
+$pasien = $this->fungsi->get_user($invoice->id_pengguna);
 $prov = $this->pesanan_m->getProv($invoice->provinsi)['nama'];
 $kota = $this->pesanan_m->getKota($invoice->kota)['nama'];
 $kec = $this->pesanan_m->getKec($invoice->kecamatan)['nama'];
@@ -23,7 +24,7 @@ switch ($invoice->status) {
 ?>
 <div class="container-fluid">
     <div class="btn btn-sm btn-success">No. Invoice: <?php echo $invoice->id_invoice ?></div>
-	<h6 class="text-muted font-weight-bold mt-4">NAMA<span class="ml-3 mr-2">:</span><?= strtoupper($invoice->nama); ?></h6>
+	<h6 class="text-muted font-weight-bold mt-4">NAMA<span class="ml-3 mr-2">:</span><?= strtoupper($pasien->nama_lengkap); ?></h6>
     <h6 class="text-muted font-weight-bold">ALAMAT<span class="ml-2 mr-2">:</span><?= $invoice->alamat; ?></h6>
     <h6 class="text-muted font-weight-bold pl-4"><span class="ml-4 pl-4"><?= "$desa - $kec - $kota - $prov"; ?></span></h6>
 

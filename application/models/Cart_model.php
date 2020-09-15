@@ -128,7 +128,6 @@ class Cart_model extends CI_Model{
 
     public function checkout($fee){
         $user = $this->fungsi->user_login();
-        $pasien = $this->input->post('id_pasien', true);
         $tgl = $this->input->post('tgl_kunjungan', true);
         $jam = $this->input->post('jam_kunjungan', true);
         $alamat = $this->input->post('alamat', true);
@@ -146,12 +145,9 @@ class Cart_model extends CI_Model{
             $price = $this->db->get_where('obat', ['id_obat' => $id])->row_array()['harga'];
             $biaya_obat += $price * $qty;
         }
-        $pasien = explode('|', $pasien);
 
         $data = [
             'id_pengguna' => $user->id_pengguna,
-            'id_pasien' => $pasien[1],
-            'nama' => $pasien[0],
             'alamat' => $alamat,
             'provinsi' => $provinsi,
             'kota' => $kota,

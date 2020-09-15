@@ -11,8 +11,6 @@ class Pembayaran_m extends CI_Model{
     $data = [
       'id_invoice' => $invoice['id_invoice'],
       'id_pengguna' => $invoice['id_pengguna'],
-      'nama' => $invoice['nama'],
-      'alamat' => $invoice['alamat']." - ".$desa." - ".$kec." - ".$kota.' - '.$prov,
       'tgl_kunjungan' => $invoice['tgl_kunjungan'],
       'jam_kunjungan' => $invoice['jam_kunjungan'],
       'tgl_pesan' => $invoice['tgl_pesan'],

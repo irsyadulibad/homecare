@@ -28,7 +28,7 @@
 							<?php foreach($histories as $history): $i++; $total = intval($history['total'] + $history['biaya_lain'] + $history['biaya_kirim']); ?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $history['nama']; ?></td>
+								<td><?= $this->fungsi->get_user($history['id_pengguna'])->nama_lengkap; ?></td>
 								<td><?= $history['tgl_kunjungan']; ?></td>
 								<td><?= $history['jam_kunjungan']; ?></td>
 								<td><?= $history['tgl_pesan']; ?></td>

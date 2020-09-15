@@ -34,16 +34,15 @@ class Ulasan_m extends CI_Model {
     public function tambah_ulasan($riwayat){
         $rating = $this->input->post('rating', true);
         $descript = $this->input->post('description', true);
+        $user = $this->fungsi->get_user($riwayat['id_pengguna']);
 
         $data = [
-            'id_invoice' => $riwayat['id_invoice'],
             'id_pengguna' => $riwayat['id_pengguna'],
             'id_medis' => $riwayat['id_medis'],
             'time' => date('Y-m-d H:i:s'),
             'rating' => $rating,
             'deskripsi' => $descript,
-            'nama' => $riwayat['nama'],
-            'alamat' => $riwayat['alamat']
+            'nama' => $user->nama_lengkap
         ];
 
         $this->db->insert('ulasan', $data);

@@ -58,7 +58,6 @@ class Homecare extends CI_Controller {
 		$this->template->load('template2', 'dashboard/dasmedis', $data);
   }else{
    		$data['pesanan'] = $this->db->get_where('invoice', ['id_pengguna' => $user->id_pengguna])->num_rows();
-		$data['pasien'] = $this->db->get_where('pasien', ['id_pengguna' => $user->id_pengguna])->num_rows();
 		$this->template->load('template2', 'dashboard/home', $data);
   }
 }
