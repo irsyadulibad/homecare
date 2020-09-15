@@ -39,7 +39,7 @@ public function getlay($id = null){
         return $query;
     }
     function getrating(){
-        $sql = "SELECT avg(rating) avgdata FROM komentar";
+        $sql = "SELECT avg(rating) avgdata FROM ulasan";
         $query= $this->db->query($sql);
         return $query->row_array();
     }
