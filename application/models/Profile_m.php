@@ -8,15 +8,37 @@ class Profile_m extends CI_Model{
 		$phone = $this->input->post('phone', true);
 		$email = $this->input->post('email', true);
 		$gender = $this->input->post('gender', true);
+		$alamat = $this->input->post('address', true);
+		$provinsi = $this->input->post('provinsi', true);
+		$kota = $this->input->post('kota', true);
+		$kecamatan = $this->input->post('kecamatan', true);
+		$desa = $this->input->post('desa', true);
 
 		$data = [
 			'nama_lengkap' => $nama,
 			'email' => $email,
 			'no_hp' => $phone,
-			'jenis_kelamin' => $gender
+			'jenis_kelamin' => $gender,
 		];
 
 		$this->db->update('pengguna', $data, ['id_pengguna' => $id]);
+		
+		$exist = $this->fungsi->get_address($id);
+		$data = [
+			'id_pengguna' => $id,
+			'alamat' => $alamat,
+			'provinsi' => $provinsi,
+			'kota' => $kota,
+			'kecamatan' => $kecamatan,
+			'desa' => $desa
+		];
+
+		if(is_null($exist)){
+			$this->db->insert('alamat', $data);
+		}else{
+			$this->db->update('alamat', $data, ['id_pengguna' => $id]);
+		}
+		
 		return $this->db->affected_rows();
 	}
 

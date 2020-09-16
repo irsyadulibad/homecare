@@ -6,6 +6,7 @@ class Profile extends CI_Controller{
 		parent::__construct();
 		check_not_login();
 		$this->load->model('Profile_m', 'profile_m');
+		$this->load->model('Daerah_m', 'daerah');
 	}
 
 	public function index(){
@@ -35,6 +36,12 @@ class Profile extends CI_Controller{
 		$this->form_validation->set_rules('gender', 'Jenis Kelamin', 'required');
 		$this->form_validation->set_rules('phone', 'No HP', 'required');
 		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+		$this->form_validation->set_rules('address', 'Alamat', 'required');
+		$this->form_validation->set_rules('provinsi', 'provinsi', 'required|is_numeric');
+		$this->form_validation->set_rules('kota', 'kota', 'required|is_numeric');
+		$this->form_validation->set_rules('kecamatan', 'kecamatan', 'required|is_numeric');
+		$this->form_validation->set_rules('desa', 'desa', 'required|is_numeric');
+
 
 		if($this->form_validation->run() == FALSE){
 			$data['user'] = $this->fungsi->user_login();

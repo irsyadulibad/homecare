@@ -118,17 +118,17 @@ $(document).ready(function(){
 
   $("#kota").remoteChained({
     parents : "#provinsi",
-    url : baseUrl+'pesanan/get_kota'
+    url : baseUrl+'chained/get_kota'
   });
 
   $("#kecamatan").remoteChained({
     parents : "#kota",
-    url : baseUrl+'pesanan/get_kecamatan'
+    url : baseUrl+'chained/get_kecamatan'
   });
 
   $("#desa").remoteChained({
     parents : "#kecamatan",
-    url : baseUrl+'pesanan/get_desa'
+    url : baseUrl+'chained/get_desa'
   });
 
   function readURL(input) {
