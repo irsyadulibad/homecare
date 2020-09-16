@@ -11,7 +11,7 @@ class Daerah_m extends CI_Model{
 			return $this->db->get()->result();
 		}else{
 			$this->db->where('id_provinsi', $id);
-			return $this->db->get()->result();
+			return $this->db->get()->row();
 		}
 	}
 
@@ -59,7 +59,7 @@ class Daerah_m extends CI_Model{
 	}
 
 	public function kecamatan($kcid){
-		return $this->db->get_where('dd_kecamatan', ['id_kecamatan' => $kcid])->row();
+		return $this->db->get_where('dd_kecamatan', ['id' => $kcid])->row();
 	}
 
 	public function desa($did){

@@ -26,29 +26,13 @@ Class Fungsi {
       if($type == 'arr'){
         return $addr;
       }else if($type = 'str'){
-        $this->ci->load->model('Dropdown_chained_model', 'model');
-        $des = $this->desa($addr->desa)->nama;
-        $kec = $this->kecamatan($addr->kecamatan)->nama;
-        $kot = $this->kota($addr->kota)->nama;
-        $prov = $this->provinsi($addr->provinsi)->nama;
+        $this->ci->load->model('Daerah_m', 'daerah');
+        $des = $this->ci->daerah->desa($addr->desa)->nama;
+        $kec = $this->ci->daerah->kecamatan($addr->kecamatan)->nama;
+        $kot = $this->ci->daerah->kota($addr->kota)->nama;
+        $prov = $this->ci->daerah->get_provinsi($addr->provinsi)->nama;
         $addr = $addr->alamat;
         return "$addr, $des - $kec - $kot - $prov";
       }
-    }
-
-    public function desa($id){
-      return $this->ci->db->get_where('dd_desa', ['id' => $id])->row();
-    }
-
-    public function kecamatan($id){
-      return $this->ci->db->get_where('dd_kecamatan', ['id' => $id])->row();
-    }
-
-    public function kota($id){
-      return $this->ci->db->get_where('dd_kota', ['id_kota' => $id])->row();
-    }
-
-    public function provinsi($id){
-      return $this->ci->db->get_where('dd_provinsi', ['id_provinsi' => $id])->row();
     }
 }
