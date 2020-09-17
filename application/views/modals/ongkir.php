@@ -15,7 +15,7 @@
             <label for="provinsi">Provinsi</label>
             <select name="provinsi" id="provinsi" class="form-control">
               <option value="">-Pilih Provinsi-</option>
-            <?php foreach($provinsi->result() as $prov): ?>
+            <?php foreach($provinsi as $prov): ?>
               <option value="<?= $prov->id_provinsi; ?>"><?= $prov->nama; ?></option>
             <?php endforeach; ?>
             </select>

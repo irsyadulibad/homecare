@@ -1,3 +1,7 @@
+<?php
+$fullAddr = $this->fungsi->get_address($user->id_pengguna, 'str');
+$addr = explode(',', $fullAddr);
+?>
 <div class="row justify-content-center">
   <div class="col-md-6">
     <div class="card">
@@ -26,46 +30,22 @@
           <img src="" alt="kondisi" height="50" class="img-edit">
         </div>
         <div class="form-group">
-          <label for="">Alamat Lengkap</label>
-          <textarea name="alamat" id="alamat" class="form-control"><?= set_value('alamat'); ?></textarea>
-          <small class="text-danger"><?= form_error('alamat'); ?></small>
-        </div>
-        <div class="form-group">
-          <label for="">Pilih Provinsi</label>
-          <select name="provinsi" id="provinsi" class="form-control">
-            <option value="">Pilih Provinsi</option>
-            <?php foreach($provinsi->result() as $prov): ?>
-              <option value="<?= $prov->id_provinsi; ?>"><?= $prov->nama; ?></option>
-            <?php endforeach; ?>
-          </select>
-          <small class="text-danger"><?= form_error('provinsi'); ?></small>
-        </div>
-        <div class="form-group">
-          <label for="">Pilih Kota</label>
-          <select name="kota" id="kota" class="form-control">
-            <option value="">Pilih Kota</option>
-          </select>
-          <small class="text-danger"><?= form_error('kota'); ?></small>
-        </div>
-        <div class="form-group">
-          <label for="">Pilih Kecamatan</label>
-          <select name="kecamatan" id="kecamatan" class="form-control">
-            <option value="">Pilih Kecamatan</option>
-          </select>
-          <small class="text-danger"><?= form_error('kecamatan'); ?></small>
-        </div>
-        <div class="form-group">
-          <label for="">Pilih Desa</label>
-          <select name="desa" id="desa" class="form-control">
-            <option value="">Pilih Desa</option>
-          </select>
-          <small class="text-danger"><?= form_error('desa'); ?></small>
+          <div class="card border">
+            <div class="card-header bg-light pb-0">
+              <h6 class="float-left">Alamat</h6>
+            </div>
+            <div class="card-body pt-0">
+              <p><?= $addr[0]; ?></p>
+              <strong><?= trim($addr[1]); ?></strong>
+              <a href="<?= base_url('profile/edit'); ?>" class="badge badge-primary badge-sm float-right mt-4">Ubah Alamat</a>
+            </div>
+          </div>
         </div>
         <div class="form-group m-0">
           <small>*Cek ketersediaan untuk memastikan daerah anda telah tercover layanan kami</small>
         </div>
         <div class="form-group">
-          <button type="button" class="btn btn-info coverage-check"><i class="fas fa-exclamation-circle"></i> Cek Ketersediaan</button>
+          <button type="button" class="btn btn-info coverage-check" data-kec="<?= $user->alamat->kecamatan; ?>"><i class="fas fa-exclamation-circle"></i> Cek Ketersediaan</button>
           <button class="btn btn-success float-right" type="submit"><i class="fas fa-check"></i> Simpan</button>
         </div>
       </form>

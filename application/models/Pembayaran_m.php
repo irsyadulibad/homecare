@@ -3,11 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pembayaran_m extends CI_Model{
   public function set_history($invoice){
-    $prov = $this->pesanan_m->getProv($invoice['provinsi'])['nama'];
-    $kota = $this->pesanan_m->getKota($invoice['kota'])['nama'];
-    $kec = $this->pesanan_m->getKec($invoice['kecamatan'])['nama'];
-    $desa = $this->pesanan_m->getDesa($invoice['desa'])['nama'];
-
     $data = [
       'id_invoice' => $invoice['id_invoice'],
       'id_pengguna' => $invoice['id_pengguna'],

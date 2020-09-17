@@ -10,9 +10,6 @@ class Cart extends CI_Controller{
         $this->load->model('user_m');
         $this->load->model('model_invoice');
         $this->load->model('obat_m');
-
-
-        $this->load->model('dropdown_chained_model','model');
         check_not_login();
     }
 
@@ -62,27 +59,27 @@ class Cart extends CI_Controller{
         echo $res;
     }
     function checkout() {
+        $user = $this->fungsi->user_login();
+        if(is_null($user->alamat)){
+            $this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Alamat masih belum diisi']);
+            redirect('profile/edit');
+        }
+
         if($this->cart->total_items() < 1){
             $this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Keranjang belanja masih kosong']);
             redirect('cart');
         }
         $this->form_validation->set_rules('tgl_kunjungan', 'Tgl Kunjungan', 'required');
         $this->form_validation->set_rules('jam_kunjungan', 'Jam Kunjungan', 'required');
-        $this->form_validation->set_rules('alamat', 'Alamat', 'required');
-        $this->form_validation->set_rules('provinsi', 'Provinsi', 'required');
-        $this->form_validation->set_rules('kota', 'Kota', 'required');
-        $this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required');
-        $this->form_validation->set_rules('desa', 'Desa', 'required');
 
         if($this->form_validation->run() == false){
-            $data['provinsi'] = $this->model->get_provinsi();
             $data['layanan'] = $this->layanan_m->getlay();
-            $data['user'] = $this->fungsi->user_login();
-            $id = $this->fungsi->user_login()->id_pengguna;
+            $data['user'] = $user;
+            $id = $user->id_pengguna;
             $data['head'] = "Checkout Pesanan";
             $this->template->load('template2','cart/bayar',$data);
         }else{
-            $fee = $this->cart_model->coverage_check();
+            $fee = $this->cart_model->coverage_check($user);
             if(!$fee){
                 $this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Daerah anda belum tercover']);
                 redirect('cart/checkout');

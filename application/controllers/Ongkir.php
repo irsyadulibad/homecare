@@ -8,12 +8,12 @@ class Ongkir extends CI_Controller {
 		check_admin();
 		$this->load->model('ongkir_m');
 		$this->load->model('pesanan_m');
-		$this->load->model('dropdown_chained_model','model');
+		$this->load->model('Daerah_m', 'daerah');
 	}
 
 	public function index(){
 		$data['ongkirs'] = $this->ongkir_m->get_ongkir();
-		$data['provinsi'] = $this->model->get_provinsi();
+		$data['provinsi'] = $this->daerah->get_provinsi();
 		$data['modal'] = 'ongkir';
 		$this->template->load('template2', 'ongkir/index', $data);
 	}

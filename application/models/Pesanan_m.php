@@ -97,18 +97,7 @@ class Pesanan_m extends CI_Model{
     function get_data($table){
 		return $this->db->get($table);
 	}
-    function getProv($id){
-        return $this->db->get_where('dd_provinsi', ['id_provinsi' => $id])->row_array();
-    }
-    function getKota($id){
-        return $this->db->get_where('dd_kota', ['id_kota' => $id])->row_array();
-    }
-    function getKec($id){
-        return $this->db->get_where('dd_kecamatan', ['id' => $id])->row_array();
-    }
-    function getDesa($id){
-        return $this->db->get_where('dd_desa', ['id' => $id])->row_array();
-    }
+    
     public function coverage_check($id_kec){
         $postfee = $this->db->get_where('ongkir', ['id_kecamatan' => $id_kec])->row_array();
         if(empty($postfee)){

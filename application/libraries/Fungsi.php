@@ -6,16 +6,17 @@ Class Fungsi {
 
     }
     public function user_login(){
-        $this->ci->load->model('user_m');
-        $user_id=$this->ci->session->userdata('id_pengguna');
-        $user_data=$this->ci->user_m->get($user_id)->row();
-        $user_data->alamat = $this->get_address($user_id);
-        return $user_data;
+      $this->ci->load->model('user_m');
+      $user_id=$this->ci->session->userdata('id_pengguna');
+      $user_data=$this->ci->user_m->get($user_id)->row();
+      $user_data->alamat = $this->get_address($user_id);
+      return $user_data;
     }
 
-    public function get_user($id){
-    	$this->ci->load->model('user_m');
-    	$user_data=$this->ci->user_m->get($id)->row();
+    public function get_user($uid){
+      $this->ci->load->model('user_m');
+    	$user_data =$this->ci->user_m->get($uid)->row();
+      $user_data->alamat = $this->get_address($uid);
       return $user_data;
     }
 

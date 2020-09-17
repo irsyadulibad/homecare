@@ -43,12 +43,13 @@ function badge($status){
 							</tr>
 						<?php else: $i = 0; ?>
 							<?php foreach($pesanans as $pesanan): $i++;?>
+							<?php $user = $this->fungsi->get_user($pesanan['id_pengguna']); ?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $this->fungsi->get_user($pesanan['id_pengguna'])->nama_lengkap; ?></td>
+								<td><?= $user->nama_lengkap; ?></td>
 								<td><?= $pesanan['tgl_kunjungan']; ?></td>
 								<td><?= $pesanan['jam_kunjungan']; ?></td>
-								<td><?= $pesanan['alamat']; ?></td>
+								<td><?= $user->alamat->alamat; ?></td>
 								<td><div class="badge badge-<?= badge($pesanan['status']); ?>"><?= $pesanan['status']; ?></div></td>
 								<td>
 									<a href="<?= base_url('invoice/detail/'.$pesanan['id_invoice']); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>

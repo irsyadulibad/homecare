@@ -54,12 +54,13 @@
 							</tr>
 						<?php else: $i=0; ?>
 							<?php foreach($pending_invoice as $pi): $i++; ?>
+							<?php $user = $this->fungsi->get_user($pi['id_pengguna']); ?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $this->fungsi->get_user($pi['id_pengguna'])->nama_lengkap; ?></td>
+								<td><?= $user->nama_lengkap; ?></td>
 								<td><?= $pi['tgl_kunjungan']; ?></td>
 								<td><?= $pi['jam_kunjungan']; ?></td>
-								<td><?= $pi['alamat']; ?></td>
+								<td><?= $user->alamat->alamat; ?></td>
 								<td>
 									<a href="<?= base_url('invoice/detail/'.$pi['id_invoice']); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>
 									<a href="<?= base_url('invoice/accept/'.$pi['id_invoice']); ?>?prev=diuser" class="btn btn-sm btn-success confirm-href"><i class="fas fa-check"></i> Terima</a

@@ -32,9 +32,9 @@ class Ongkir_m extends CI_Model{
 	}
 
 	public function get_ongkir_html($ongkir){
-		$prov = $this->pesanan_m->getProv($ongkir['id_provinsi'])['nama'];
-		$kota = $this->pesanan_m->getKota($ongkir['id_kota'])['nama'];
-		$kec = $this->pesanan_m->getKec($ongkir['id_kecamatan'])['nama'];
+		$prov = $this->daerah->get_provinsi($ongkir['id_provinsi'])->nama;
+		$kota = $this->daerah->kota($ongkir['id_kota'])->nama;
+		$kec = $this->daerah->kecamatan($ongkir['id_kecamatan'])->nama;
 		return '
 <div class="form-group">
 	<input type="hidden" name="id" value="'.$ongkir['id'].'"

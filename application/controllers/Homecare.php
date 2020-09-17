@@ -7,7 +7,7 @@ class Homecare extends CI_Controller {
     parent::__construct();
     $this->load->model('layanan_m');
     $this->load->model('pesanan_m');
-    }
+  }
 	public function index()
 	{
     check_not_login();

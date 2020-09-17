@@ -33,9 +33,9 @@
 							<?php foreach($ongkirs as $ongkir): $i++;?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $this->pesanan_m->getProv($ongkir['id_provinsi'])['nama']; ?></td>
-								<td><?= $this->pesanan_m->getKota($ongkir['id_kota'])['nama']; ?></td>
-								<td><?= $this->pesanan_m->getKec($ongkir['id_kecamatan'])['nama']; ?></td>
+								<td><?= $this->daerah->get_provinsi($ongkir['id_provinsi'])->nama; ?></td>
+								<td><?= $this->daerah->kota($ongkir['id_kota'])->nama; ?></td>
+								<td><?= $this->daerah->kecamatan($ongkir['id_kecamatan'])->nama; ?></td>
 								<td>Rp.<?= number_format($ongkir['tarif'],0,',','.'); ?></td>
 								<td>
 									<button data-id="<?= $ongkir['id']; ?>" class="btn btn-sm btn-primary btn-edit-ongkir" data-toggle="modal" data-target="#editOngkirModal"><i class="fas fa-edit"></i> Edit</button>

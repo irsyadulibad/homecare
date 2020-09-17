@@ -15,6 +15,7 @@ function badge($status){
         break;
     }
 }
+$address = explode(',', $this->fungsi->get_address($user->id_pengguna, 'str'));
 ?>
 <div class="row">
 	<div class="col-12">
@@ -49,7 +50,7 @@ function badge($status){
 								<td><?= $user->nama_lengkap; ?></td>
 								<td><?= $pesanan['tgl_kunjungan']; ?></td>
 								<td><?= $pesanan['jam_kunjungan']; ?></td>
-								<td><?= $pesanan['alamat']; ?></td>
+								<td><?= trim($address[0]); ?></td>
 								<td><div class="badge badge-<?= badge($pesanan['status']); ?>"><?= $pesanan['status']; ?></div></td>
 								<td>
 									<a href="<?= base_url('invoice/detail/'.$pesanan['id_invoice']); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>

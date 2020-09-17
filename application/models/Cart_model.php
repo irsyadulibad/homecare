@@ -130,11 +130,6 @@ class Cart_model extends CI_Model{
         $user = $this->fungsi->user_login();
         $tgl = $this->input->post('tgl_kunjungan', true);
         $jam = $this->input->post('jam_kunjungan', true);
-        $alamat = $this->input->post('alamat', true);
-        $provinsi = $this->input->post('provinsi', true);
-        $kota = $this->input->post('kota', true);
-        $kecamatan = $this->input->post('kecamatan', true);
-        $desa = $this->input->post('desa', true);
         $total = 0;
         $biaya_obat = 0;
 
@@ -148,11 +143,6 @@ class Cart_model extends CI_Model{
 
         $data = [
             'id_pengguna' => $user->id_pengguna,
-            'alamat' => $alamat,
-            'provinsi' => $provinsi,
-            'kota' => $kota,
-            'kecamatan' => $kecamatan,
-            'desa' => $desa,
             'jam_kunjungan' => $jam,
             'tgl_kunjungan' => $tgl,
             'kondisi' => $this->upload_kondisi(),
@@ -206,8 +196,8 @@ class Cart_model extends CI_Model{
         }
     }
 
-    public function coverage_check(){
-        $id_kec = $this->input->post('kecamatan', true);
+    public function coverage_check($user){
+        $id_kec = $user->alamat->kecamatan;
         $postfee = $this->db->get_where('ongkir', ['id_kecamatan' => $id_kec])->row_array();
         if(is_null($postfee)){
             return false;

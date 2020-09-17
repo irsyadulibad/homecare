@@ -146,7 +146,7 @@ $(document).ready(function(){
     readURL(this);
   });
   $('.coverage-check').click(function(e){
-    let kecamatan = $('#kecamatan').val();
+    let kecamatan = $(this).data('kec');
     $.ajax({
       url: baseUrl+'pesanan/coverage_check',
       method: 'post',

@@ -7,8 +7,6 @@ class Pesanan extends CI_Controller{
     $this->load->model('layanan_m');
     $this->load->model('user_m');
     $this->load->model('obat_m');
-
-    $this->load->model('dropdown_chained_model','model');
   }
   public function index(){
     $role = $this->fungsi->user_login()->role;
