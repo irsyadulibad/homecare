@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Bulan Mei 2020 pada 17.17
+-- Waktu pembuatan: 17 Sep 2020 pada 21.54
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 7.3.3
 
@@ -21,6 +21,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `homecare`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `alamat`
+--
+
+CREATE TABLE `alamat` (
+  `id` int(11) NOT NULL,
+  `id_pengguna` int(11) NOT NULL,
+  `alamat` text NOT NULL,
+  `desa` char(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `kecamatan` char(7) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `kota` int(5) NOT NULL,
+  `provinsi` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `alamat`
+--
+
+INSERT INTO `alamat` (`id`, `id_pengguna`, `alamat`, `desa`, `kecamatan`, `kota`, `provinsi`) VALUES
+(6, 3, 'Rahasia', '1101010001', '1101010', 1101, 11);
 
 -- --------------------------------------------------------
 
@@ -82307,7 +82330,7 @@ CREATE TABLE `dd_kota` (
   `id_provinsi` int(11) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `slug` varchar(200) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `dd_kota`
@@ -82906,43 +82929,23 @@ CREATE TABLE `invoice` (
   `id_invoice` int(11) NOT NULL,
   `status` enum('pending','accepted','finished','paying','payed') NOT NULL DEFAULT 'pending',
   `id_pengguna` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `alamat` varchar(255) NOT NULL,
-  `provinsi` varchar(50) NOT NULL,
-  `kota` varchar(50) NOT NULL,
-  `kecamatan` varchar(50) NOT NULL,
-  `desa` varchar(50) NOT NULL,
   `jam_kunjungan` time NOT NULL,
   `tgl_kunjungan` date NOT NULL,
-  `kondisi` longtext NOT NULL,
+  `kondisi` varchar(200) NOT NULL,
   `tgl_pesan` datetime NOT NULL,
   `biaya_lain` int(11) DEFAULT NULL,
+  `biaya_kirim` int(11) NOT NULL,
   `biaya_obat` int(11) NOT NULL,
   `total` int(11) NOT NULL,
   `id_medis` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
 --
--- Struktur dari tabel `komentar`
+-- Dumping data untuk tabel `invoice`
 --
 
-CREATE TABLE `komentar` (
-  `id_komentar` int(11) NOT NULL,
-  `id_pengguna` int(11) NOT NULL,
-  `id_pesanan` int(11) NOT NULL,
-  `rating` int(11) NOT NULL,
-  `komentar` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `komentar`
---
-
-INSERT INTO `komentar` (`id_komentar`, `id_pengguna`, `id_pesanan`, `rating`, `komentar`) VALUES
-(1, 1, 1, 5, 'mantab'),
-(2, 1, 1, 2, 'aduh\r\n');
+INSERT INTO `invoice` (`id_invoice`, `status`, `id_pengguna`, `jam_kunjungan`, `tgl_kunjungan`, `kondisi`, `tgl_pesan`, `biaya_lain`, `biaya_kirim`, `biaya_obat`, `total`, `id_medis`) VALUES
+(2, 'accepted', 3, '21:51:00', '2020-09-17', 'default.jpg', '2020-09-17 00:00:00', 0, 50000, 10000, 20000, 2);
 
 -- --------------------------------------------------------
 
@@ -82963,12 +82966,27 @@ CREATE TABLE `layanan` (
 --
 
 INSERT INTO `layanan` (`id_layanan`, `id_obat`, `jenis_layanan`, `keterangan`, `harga`) VALUES
-(2, 1, 'Pemeriksaan Luka', 'Khusus Wanita Jelek', 50000),
-(13, 1, 'sakit gigi', 'sadx', 40001),
-(14, 2, 'Perawatan Luka Ringan', 'asd', 40000),
-(15, NULL, 'Perawatan Lansia', 'Khusus Lansisa', 120000),
-(16, NULL, 'Pemeriksaan THT', '', 2000),
-(17, NULL, 'Pemeriksaan Tensi Darah', '', 25000);
+(1, NULL, 'Pengobatan Sakit Kepala', '-', 20000),
+(2, NULL, 'Demam Berdarah', '-', 50000);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `lay_ob`
+--
+
+CREATE TABLE `lay_ob` (
+  `id` int(11) NOT NULL,
+  `id_layanan` int(11) NOT NULL,
+  `id_obat` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `lay_ob`
+--
+
+INSERT INTO `lay_ob` (`id`, `id_layanan`, `id_obat`) VALUES
+(2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -82988,40 +83006,28 @@ CREATE TABLE `obat` (
 --
 
 INSERT INTO `obat` (`id_obat`, `nama`, `stok`, `harga`) VALUES
-(1, 'Pharacetamol', 15, 10000),
-(2, 'Betadin', 5, 5000);
+(1, 'Paracetamol', 46, 10000);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pasien`
+-- Struktur dari tabel `ongkir`
 --
 
-CREATE TABLE `pasien` (
-  `id_pasien` int(11) NOT NULL,
-  `id_pengguna` int(11) NOT NULL,
-  `nama_user` varchar(50) NOT NULL,
-  `nama_lengkap` varchar(50) NOT NULL,
-  `foto` varchar(255) NOT NULL,
-  `jenis_kelamin` varchar(30) NOT NULL,
-  `alamat` text NOT NULL,
-  `provinsi` varchar(50) NOT NULL,
-  `kota` varchar(50) NOT NULL,
-  `tgl_lahir` date NOT NULL,
-  `kewarganegaraan` varchar(10) NOT NULL,
-  `no_darurat` varchar(13) NOT NULL,
-  `keterangan` text NOT NULL
+CREATE TABLE `ongkir` (
+  `id` int(11) NOT NULL,
+  `id_provinsi` int(11) NOT NULL,
+  `id_kota` int(11) NOT NULL,
+  `id_kecamatan` int(11) NOT NULL,
+  `tarif` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `pasien`
+-- Dumping data untuk tabel `ongkir`
 --
 
-INSERT INTO `pasien` (`id_pasien`, `id_pengguna`, `nama_user`, `nama_lengkap`, `foto`, `jenis_kelamin`, `alamat`, `provinsi`, `kota`, `tgl_lahir`, `kewarganegaraan`, `no_darurat`, `keterangan`) VALUES
-(2, 2, 'anto fery', 'pokas oka', '', '1', 'buleleng', '', '', '1222-12-12', '', '141241', ''),
-(3, 1, 'Antos Fery', 'antos', '', '1', 'asfafas', '', '', '2019-12-30', '', '14124', ''),
-(4, 1, 'Antos Fery', 'anto fery', '', '1', 'asfafas', '', '', '2019-12-30', '', '14124', ''),
-(6, 1, 'Antos Fery', 'Rahasia', '', '1', 'Rahasia', '', '', '2020-05-12', '', '085366994', 'Dudfjzridit\r\n');
+INSERT INTO `ongkir` (`id`, `id_provinsi`, `id_kota`, `id_kecamatan`, `tarif`) VALUES
+(1, 11, 1101, 1101010, 50000);
 
 -- --------------------------------------------------------
 
@@ -83049,16 +83055,33 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`id_pengguna`, `nama_lengkap`, `nama_pengguna`, `password`, `no_hp`, `jenis_kelamin`, `email`, `foto`, `role`, `code`, `active`, `keterangan`) VALUES
-(1, 'Antos Fery', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '777777777', 1, 'antosfery@gmail.com', 'default.jpg', 1, '', 1, ''),
-(2, 'anto fery', 'user', '12dea96fec20593566ab75692c9949596833adc9', '1111111112', 1, 'antosfe22ry@gmail.com', '55354a522d127e7ce1253ab58cc75946.jpg', 3, '', 0, ''),
-(19, 'medis', 'medis', 'fab9e623fde822d147069b2b29d0c01e2ba285d3', '51512', 1, 'antoxxsfery@gmail.com', 'default.jpg', 2, '', 1, ''),
-(30, 'abang antos', 'antosfery55123', '123123123', '', 0, 'antos@antosfery.com', '', 3, 'dEJQqrPZpxB4', 0, ''),
-(32, 'Dr Irawan Setiawan', 'setiawan', '88ea39439e74fa27c09a4fc0bc8ebe6d00978392', '087888871272', 1, 'setiawanirawarn@gmail.com', '', 2, '', 0, ''),
-(33, 'abangjoe', 'abangjx', '88ea39439e74fa27c09a4fc0bc8ebe6d00978392', '8788861622', 1, 'abanganjr21@gmail.com', 'default.jpg', 3, '', 0, ''),
-(34, 'abangalex', 'abangajos', 'Fery1212', '', 0, 'antosadhi@gmail.com', 'default.jpg', 3, 'BPwZTUEOhfRr', 1, ''),
-(40, 'Irsyadul Ibad', 'mantap', 'b8e304bfd903e48d6b0a22777eaaff96401b000f', '', 0, 'ahmadirsyadulibad8@gmail.com', 'default.jpg', 3, 'kBhD5rVncW7K', 0, ''),
-(42, 'Ahmad Irsyadul Ibad', 'ibad', 'fc10025eae54954825f860e99194853b5b829a0f', '+6288217261702', 1, 'ahmadirsyadulibad7@gmail.com', 'default.jpg', 2, '', 0, ''),
-(44, 'Ahmad Irsyadul Ibad', 'secret', '829b36babd21be519fa5f9353daf5dbdb796993e', '+6288217261702', 1, 'ahmadirsyadulibad77@gmail.com', 'default.jpg', 2, '', 0, '');
+(1, 'Antos Fery', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '082345678990', 1, 'antosfery@gmail.com', 'default.jpg', 1, '', 1, ''),
+(2, 'Antos Medis', 'medis', 'fab9e623fde822d147069b2b29d0c01e2ba285d3', '088888888888', 1, 'medis@medis.com', 'default.jpg', 2, '', 0, ''),
+(3, 'Antos User', 'user', '12dea96fec20593566ab75692c9949596833adc9', '088888888888', 1, 'user@user.com', 'default.jpg', 3, '', 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pesanan`
+--
+
+CREATE TABLE `pesanan` (
+  `id_pesanan` int(11) NOT NULL,
+  `id_invoice` int(11) NOT NULL,
+  `id_layanan` int(11) NOT NULL,
+  `nama_layanan` varchar(255) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `harga` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `pesanan`
+--
+
+INSERT INTO `pesanan` (`id_pesanan`, `id_invoice`, `id_layanan`, `nama_layanan`, `jumlah`, `harga`) VALUES
+(1, 2, 1, 'Pengobatan Sakit Kepala', 1, 20000),
+(2, 1, 1, 'Pengobatan Sakit Kepala', 1, 20000),
+(3, 2, 1, 'Pengobatan Sakit Kepala', 1, 20000);
 
 -- --------------------------------------------------------
 
@@ -83078,8 +83101,9 @@ CREATE TABLE `pesanan_obat` (
 --
 
 INSERT INTO `pesanan_obat` (`id`, `id_invoice`, `id_obat`, `qty`) VALUES
-(3, 1, 1, 2),
-(4, 1, 2, 3);
+(1, 2, 1, 1),
+(2, 1, 1, 1),
+(3, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -83091,11 +83115,10 @@ CREATE TABLE `riwayat` (
   `id_riwayat` int(11) NOT NULL,
   `id_invoice` int(11) NOT NULL,
   `id_pengguna` int(11) NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `alamat` longtext NOT NULL,
   `tgl_kunjungan` date NOT NULL,
   `jam_kunjungan` time NOT NULL,
   `tgl_pesan` datetime NOT NULL,
+  `biaya_kirim` int(11) NOT NULL,
   `biaya_lain` int(11) NOT NULL,
   `total` int(11) NOT NULL,
   `id_medis` int(11) NOT NULL,
@@ -83106,44 +83129,9 @@ CREATE TABLE `riwayat` (
 -- Dumping data untuk tabel `riwayat`
 --
 
-INSERT INTO `riwayat` (`id_riwayat`, `id_invoice`, `id_pengguna`, `nama`, `alamat`, `tgl_kunjungan`, `jam_kunjungan`, `tgl_pesan`, `biaya_lain`, `total`, `id_medis`, `review`) VALUES
-(5, 1, 2, 'pokas oka', 'Rahasia - GILIMANUK - MELAYA - KABUPATEN JEMBRANA - BALI', '2002-12-02', '13:14:00', '2020-05-20 21:32:35', 15000, 235002, 19, 3);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `tb_medis`
---
-
-CREATE TABLE `tb_medis` (
-  `id_medis` int(11) NOT NULL,
-  `id_invoice` int(11) NOT NULL,
-  `nama_medis` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `tb_pesanan`
---
-
-CREATE TABLE `tb_pesanan` (
-  `id_pes` int(11) NOT NULL,
-  `id_invoice` int(11) NOT NULL,
-  `id_layanan` int(11) NOT NULL,
-  `nama_layanan` varchar(255) NOT NULL,
-  `jumlah` int(3) NOT NULL,
-  `harga` int(11) NOT NULL,
-  `pilihan` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `tb_pesanan`
---
-
-INSERT INTO `tb_pesanan` (`id_pes`, `id_invoice`, `id_layanan`, `nama_layanan`, `jumlah`, `harga`, `pilihan`) VALUES
-(3, 1, 13, 'sakit gigi', 2, 40001, ''),
-(4, 1, 14, 'Perawatan Luka Ringan', 3, 40000, '');
+INSERT INTO `riwayat` (`id_riwayat`, `id_invoice`, `id_pengguna`, `tgl_kunjungan`, `jam_kunjungan`, `tgl_pesan`, `biaya_kirim`, `biaya_lain`, `total`, `id_medis`, `review`) VALUES
+(1, 2, 3, '2020-09-15', '06:28:00', '2020-09-15 00:00:00', 10000, 20000, 30000, 2, 1),
+(2, 1, 3, '2020-09-17', '21:18:00', '2020-09-17 00:00:00', 50000, 1000, 30000, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -83159,20 +83147,31 @@ CREATE TABLE `ulasan` (
   `time` datetime NOT NULL,
   `rating` int(5) NOT NULL,
   `deskripsi` longtext NOT NULL,
-  `nama` varchar(200) NOT NULL,
-  `alamat` mediumtext NOT NULL
+  `nama` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data untuk tabel `ulasan`
 --
 
-INSERT INTO `ulasan` (`id_ulasan`, `id_invoice`, `id_pengguna`, `id_medis`, `time`, `rating`, `deskripsi`, `nama`, `alamat`) VALUES
-(3, 1, 2, 19, '2020-05-20 16:32:42', 5, 'Mantap Pelayanannya, terus tingkatkan!', 'pokas oka', 'Rahasia - GILIMANUK - MELAYA - KABUPATEN JEMBRANA - BALI');
+INSERT INTO `ulasan` (`id_ulasan`, `id_invoice`, `id_pengguna`, `id_medis`, `time`, `rating`, `deskripsi`, `nama`) VALUES
+(1, 2, 3, 2, '2020-09-15 07:08:41', 2, 'Mantap Kali lah wkwk\r\n', 'Antos User'),
+(2, 0, 3, 2, '2020-09-17 21:51:00', 5, 'Sangat Puas', 'Antos User');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indeks untuk tabel `alamat`
+--
+ALTER TABLE `alamat`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `alamat_ibfk_1` (`provinsi`),
+  ADD KEY `alamat_ibfk_2` (`kota`),
+  ADD KEY `alamat_ibfk_3` (`kecamatan`),
+  ADD KEY `alamat_ibfk_4` (`desa`),
+  ADD KEY `alamat_ibfk_5` (`id_pengguna`);
 
 --
 -- Indeks untuk tabel `cart`
@@ -83221,17 +83220,17 @@ ALTER TABLE `invoice`
   ADD PRIMARY KEY (`id_invoice`);
 
 --
--- Indeks untuk tabel `komentar`
---
-ALTER TABLE `komentar`
-  ADD PRIMARY KEY (`id_komentar`);
-
---
 -- Indeks untuk tabel `layanan`
 --
 ALTER TABLE `layanan`
   ADD PRIMARY KEY (`id_layanan`),
   ADD KEY `ob_ly` (`id_obat`);
+
+--
+-- Indeks untuk tabel `lay_ob`
+--
+ALTER TABLE `lay_ob`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `obat`
@@ -83240,17 +83239,22 @@ ALTER TABLE `obat`
   ADD PRIMARY KEY (`id_obat`);
 
 --
--- Indeks untuk tabel `pasien`
+-- Indeks untuk tabel `ongkir`
 --
-ALTER TABLE `pasien`
-  ADD PRIMARY KEY (`id_pasien`),
-  ADD KEY `id_pengguna` (`id_pengguna`);
+ALTER TABLE `ongkir`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `pengguna`
 --
 ALTER TABLE `pengguna`
   ADD PRIMARY KEY (`id_pengguna`);
+
+--
+-- Indeks untuk tabel `pesanan`
+--
+ALTER TABLE `pesanan`
+  ADD PRIMARY KEY (`id_pesanan`);
 
 --
 -- Indeks untuk tabel `pesanan_obat`
@@ -83262,13 +83266,8 @@ ALTER TABLE `pesanan_obat`
 -- Indeks untuk tabel `riwayat`
 --
 ALTER TABLE `riwayat`
-  ADD PRIMARY KEY (`id_riwayat`);
-
---
--- Indeks untuk tabel `tb_pesanan`
---
-ALTER TABLE `tb_pesanan`
-  ADD PRIMARY KEY (`id_pes`);
+  ADD PRIMARY KEY (`id_riwayat`),
+  ADD KEY `riwayat_ibfk_1` (`id_medis`);
 
 --
 -- Indeks untuk tabel `ulasan`
@@ -83281,6 +83280,12 @@ ALTER TABLE `ulasan`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `alamat`
+--
+ALTER TABLE `alamat`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT untuk tabel `cart`
 --
 ALTER TABLE `cart`
@@ -83290,65 +83295,75 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT untuk tabel `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `id_invoice` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT untuk tabel `komentar`
---
-ALTER TABLE `komentar`
-  MODIFY `id_komentar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_invoice` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `layanan`
 --
 ALTER TABLE `layanan`
-  MODIFY `id_layanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_layanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `lay_ob`
+--
+ALTER TABLE `lay_ob`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `obat`
 --
 ALTER TABLE `obat`
-  MODIFY `id_obat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_obat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `pasien`
+-- AUTO_INCREMENT untuk tabel `ongkir`
 --
-ALTER TABLE `pasien`
-  MODIFY `id_pasien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `ongkir`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `pesanan`
+--
+ALTER TABLE `pesanan`
+  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `pesanan_obat`
 --
 ALTER TABLE `pesanan_obat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `riwayat`
 --
 ALTER TABLE `riwayat`
-  MODIFY `id_riwayat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT untuk tabel `tb_pesanan`
---
-ALTER TABLE `tb_pesanan`
-  MODIFY `id_pes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_riwayat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `ulasan`
 --
 ALTER TABLE `ulasan`
-  MODIFY `id_ulasan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_ulasan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
+
+--
+-- Ketidakleluasaan untuk tabel `alamat`
+--
+ALTER TABLE `alamat`
+  ADD CONSTRAINT `alamat_ibfk_1` FOREIGN KEY (`provinsi`) REFERENCES `dd_provinsi` (`id_provinsi`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `alamat_ibfk_2` FOREIGN KEY (`kota`) REFERENCES `dd_kota` (`id_kota`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `alamat_ibfk_3` FOREIGN KEY (`kecamatan`) REFERENCES `dd_kecamatan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `alamat_ibfk_4` FOREIGN KEY (`desa`) REFERENCES `dd_desa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `alamat_ibfk_5` FOREIGN KEY (`id_pengguna`) REFERENCES `pengguna` (`id_pengguna`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `dd_desa`
@@ -83357,10 +83372,10 @@ ALTER TABLE `dd_desa`
   ADD CONSTRAINT `dd_desa_ibfk_1` FOREIGN KEY (`id_kecamatan`) REFERENCES `dd_kecamatan` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `pasien`
+-- Ketidakleluasaan untuk tabel `riwayat`
 --
-ALTER TABLE `pasien`
-  ADD CONSTRAINT `pasien_ibfk_1` FOREIGN KEY (`id_pengguna`) REFERENCES `pengguna` (`id_pengguna`);
+ALTER TABLE `riwayat`
+  ADD CONSTRAINT `riwayat_ibfk_1` FOREIGN KEY (`id_medis`) REFERENCES `pengguna` (`id_pengguna`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
