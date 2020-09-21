@@ -25,10 +25,11 @@
 							</tr>
 						<?php else: $i = 0; ?>
 							<?php foreach($invoice as $inv): $i++;?>
+							<?php $user = $this->fungsi->get_user($inv->id_pengguna); ?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $inv->nama ?></td>
-								<td><?= $inv->alamat ?></td>
+								<td><?= $user->nama_lengkap ?></td>
+								<td><?= $user->alamat->alamat ?></td>
 								<td><?= $inv->tgl_pesan ?></td>
 								<td><?= $inv->jam_kunjungan ?></td>
 								<td><?= $inv->tgl_kunjungan ?></td>
