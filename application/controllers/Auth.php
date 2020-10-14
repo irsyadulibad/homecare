@@ -2,6 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller {
+	public function __construct(){
+		parent::__construct();
+		$this->load->model('User_m', 'user');
+		$this->load->model('Medis_m', 'medis');
+	}
 
 	public function login()
 	{
@@ -17,35 +22,46 @@ class Auth extends CI_Controller {
 		$this->load->view('login/register');
 		$this->load->view('login/template/foot');
 	}
-    public function process(){
+	public function process(){
+		$email = htmlspecialchars($this->input->post('email', true));
+		$pass = htmlspecialchars($this->input->post('password', true));
 
-		$post = $this->input->post(null, TRUE);
-		if(isset($post['login'])) {
-		$this->load->model('user_m');
-		$query = $this->user_m->login($post);
-		if($query->num_rows() > 0 )
-			{
-				$row = $query->row();
-				$params = array(
-					'id_pengguna' => $row->id_pengguna,
-					'role' => $row->role,
-					'active'=> $row->active
-				);
-				$this->session->set_userdata($params);
-				$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Berhasil Login']);
+		$user = $this->user->login($email, $pass);
+		$medis = $this->medis->login($email, $pass);
+
+		if(!is_null($user)){
+			if($user['active'] == '1'){
+				$this->session->set_userdata('user', [
+					'id_pengguna' => $user['id_pengguna'],
+					'status' => $user['status']
+				]);
 				redirect('homecare');
-			}else {
-				$this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Login Gagal']);
+			}else{
+				$this->session->set_flashdata('swal', [
+					'type' => 'error',
+					'msg' => 'Akun belum diaktivasi'
+				]);
 				redirect('auth/login');
 			}
-	   }
+		}else if(!is_null($medis)){
+			$this->session->set_userdata('user', [
+				'id_pengguna' => $medis['id_medis'],
+				'status' => $medis['status']
+			]);
+			redirect('homecare');
+		}else{
+			$this->session->set_flashdata('swal', [
+				'type' => 'error',
+				'msg' => 'Email atau Passwrod tidak valid'
+			]);
+			redirect('auth/login');
+		}
 	}
+
 	public function logout(){
 		$this->cart->destroy();
 		$this->session->unset_userdata('obat');
-		$params = array('id_pengguna', 'role');
-		$this->session->unset_userdata($params);
+		$this->session->unset_userdata('user');
 		redirect('auth/login');
-
 	}
 }

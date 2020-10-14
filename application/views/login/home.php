@@ -17,8 +17,8 @@
           <div class="card-body">
             <?= form_open('auth/process'); ?>
             <div class="form-group">
-              <label for="username">Username</label>
-              <input id="username" type="username" class="form-control" name="username" tabindex="1" required autofocus>
+              <label for="email">email</label>
+              <input id="email" type="email" class="form-control" name="email" tabindex="1" required autofocus>
               <div class="invalid-feedback">
                 Please fill in your email
               </div>
