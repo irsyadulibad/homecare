@@ -24,4 +24,13 @@ class Medis_m extends CI_Model{
 
 		return $this->db->get_where($this->table, $data)->row_array();
 	}
+
+	public function total(){
+		$data = [
+			'status' => 'medis',
+			'status' => 'paramedis'
+		];
+
+		return count($this->db->get_where($this->table, $data)->result_array());
+	}
 }

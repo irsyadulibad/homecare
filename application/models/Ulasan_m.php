@@ -32,6 +32,21 @@ class Ulasan_m extends CI_Model {
     return $this->db->get()->row_array();
   }
 
+  public function get_average_all(){
+    $this->db->select('ROUND(AVG(rating), 1) AS average');
+    $avg = $this->db->get('ulasan')->row_array()['average'];
+    return is_null($avg) ? 0 : $avg;
+  }
+
+  public function get_average_by_medic($id){
+    $this->db->select('ROUND(AVG(ulasan.rating), 1) AS average');
+    $this->db->from('ulasan');
+    $this->db->join('invoice', 'ulasan.id_invoice = invoice.id_invoice');
+    $this->db->where('invoice.id_medis', $id);
+    $avg = $this->db->get()->row_array()['average'];
+    return is_null($avg) ? 0 : $avg;
+  }
+
   public function num_rows($id, $rating=0){
     if($rating != 0) $this->db->where('rating', $rating);
     $this->db->where('id_medis', $id);

@@ -20,6 +20,10 @@ class User_m extends CI_Model {
 
     return $this->db->get_where($this->table, $data)->row_array();
   }
+
+  public function total(){
+    return count($this->db->get('pengguna')->result_array());
+  }
   
   public function getmedis($id = null){
     $this->db->from('pengguna');

@@ -19,13 +19,13 @@ Class Fungsi {
 
   public function get_user($uid){
     $this->ci->load->model('user_m');
-    $user_data =$this->ci->user_m->get($uid)->row();
-    $user_data->alamat = $this->get_address($uid);
-    return $user_data;
+    $user =$this->ci->user_m->get($uid);
+    $user['alamat'] = $this->get_address($user['id_alamat']);
+    return $user; 
   }
 
-  public function get_address($uid, $type = 'arr'){
-    $addr = $this->ci->db->get_where('alamat', ['id_pengguna' => $uid])->row();
+  public function get_address($aid, $type = 'arr'){
+    $addr = $this->ci->db->get_where('alamat_pengguna', ['id_alamat' => $aid])->row_array();
     $str = "";
 
     if($type == 'arr'){

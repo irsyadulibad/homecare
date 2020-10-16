@@ -42,32 +42,28 @@
 						<thead>
 							<th>#</th>
 							<th>Nama Pasien</th>
-							<th>Tgl Kunjungan</th>
-							<th>Jam Kunjungan</th>
 							<th>Alamat</th>
 							<th>Aksi</th>
 						</thead>
 						<tbody>
-						<?php if(empty($pending_invoice)): ?>
+							<?php if(empty($pending_invoice)): ?>
 							<tr>
 								<td colspan="7">Data masih kosong</td>
 							</tr>
-						<?php else: $i=0; ?>
-							<?php foreach($pending_invoice as $pi): $i++; ?>
-							<?php $user = $this->fungsi->get_user($pi['id_pengguna']); ?>
-							<tr>
-								<td><?= $i; ?></td>
-								<td><?= $user->nama_lengkap; ?></td>
-								<td><?= $pi['tgl_kunjungan']; ?></td>
-								<td><?= $pi['jam_kunjungan']; ?></td>
-								<td><?= $user->alamat->alamat; ?></td>
-								<td>
-									<a href="<?= base_url('invoice/detail/'.$pi['id_invoice']); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>
-									<a href="<?= base_url('invoice/accept/'.$pi['id_invoice']); ?>?prev=diuser" class="btn btn-sm btn-success confirm-href"><i class="fas fa-check"></i> Terima</a
-								</td>
-							</tr>
-							<?php endforeach; ?>
-						<?php endif; ?>
+							<?php else: $i=0; ?>
+								<?php foreach($pending_invoice as $pi): $i++; ?>
+									<?php $user = $this->fungsi->get_user($pi['id_pengguna']); ?>
+									<tr>
+										<td><?= $i; ?></td>
+										<td><?= $user['nama_lengkap']; ?></td>
+										<td><?= $user['alamat']['alamat']; ?></td>
+										<td>
+											<a href="<?= base_url('invoice/detail/'.$pi['id_invoice']); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>
+											<a href="<?= base_url('invoice/accept/'.$pi['id_invoice']); ?>?prev=diuser" class="btn btn-sm btn-success confirm-href"><i class="fas fa-check"></i> Terima</a
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php endif; ?>
 						</tbody>
 					</table>
 				</div>

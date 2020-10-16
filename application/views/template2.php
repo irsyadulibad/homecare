@@ -42,13 +42,13 @@ $uri = $this->uri->segment(1);
               <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
             </ul>
             <div class="search-element">
-              
+
             </div>
           </form>
           
           <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-            <img alt="image" src="<?= base_url('assets/img/profile/'.$user->foto); ?>" class="rounded-circle" width="30" height="30">
-            <div class="d-sm-none d-lg-inline-block">Hi, <?= $user->nama_lengkap ?></div></a>
+            <img alt="image" src="<?= base_url('assets/img/profile/'.$user['foto']); ?>" class="rounded-circle" width="30" height="30">
+            <div class="d-sm-none d-lg-inline-block">Hi, <?= $user['nama_lengkap'] ?></div></a>
             <div class="dropdown-menu dropdown-menu-right">
               <a href="<?= base_url('profile'); ?>" class="dropdown-item has-icon">
                 <ion-icon name="person-outline"></ion-icon> Profil Saya
@@ -75,7 +75,7 @@ $uri = $this->uri->segment(1);
           <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
             <li class="<?= ($uri=="homecare")?'active':''; ?>"><a class="nav-link" href="<?= base_url('homecare'); ?>"><ion-icon name="speedometer" class="mr-4 ml-2"></ion-icon> <span>Dashboard</span></a></li>
-            <?php if($user->role == 1): ?>
+            <?php if($user['status'] == 'admin'): ?>
               <li class="menu-header">Pengguna</li>
               <li class="nav-item dropdown <?= ($uri=="user")?'active':''; ?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-users"></i><span>Manajemen Data Pengguna</span></a>
@@ -87,7 +87,7 @@ $uri = $this->uri->segment(1);
                 </ul>
               </li>
             <?php endif; ?>
-            <?php if($user->role == 1): ?>
+            <?php if($user['status'] == 'admin'): ?>
               <li class="menu-header">Obat</li>
               <li class="nav-item dropdown <?= ($uri=="obat")?'active':''; ?>">
                 <a href="#" class="nav-link has-dropdown"><ion-icon name="medkit" class="mr-4 ml-2"></ion-icon><span>Manajemen Obat</span></a>
@@ -98,7 +98,7 @@ $uri = $this->uri->segment(1);
               </li>
             <?php endif; ?>
             <li class="menu-header">Invoices</li>
-            <?php if($user->role == 1): ?>
+            <?php if($user['status'] == 'admin'): ?>
               <li class="nav-item dropdown <?= ($uri=="layanan")?'active':''; ?>">
                 <a href="#" class="nav-link has-dropdown"><ion-icon name="reorder-four" class="mr-4 ml-2"></ion-icon><span>Manajemen Layanan</span></a>
                 <ul class="dropdown-menu">
@@ -116,13 +116,13 @@ $uri = $this->uri->segment(1);
             <li class="nav-item dropdown <?= ($uri=="pesanan")?'active':''; ?>">
               <a href="#" class="nav-link has-dropdown"><ion-icon name="mail" class="mr-4 ml-2"></ion-icon><span>Pesanan</span></a>
               <ul class="dropdown-menu">
-                <?php if($user->role == 3): ?>
+                <?php if($user['status'] == 'user'): ?>
                   <li><a class="nav-link" href="<?= base_url('cart'); ?>">Tambah Pesanan</a></li>
                 <?php endif; ?>
                 <li><a class="nav-link" href="<?= base_url('pesanan'); ?>">Daftar Pesanan</a></li>
               </ul>
             </li>
-            <?php if($user->role == 2): ?>
+            <?php if($user['status'] == 'medis' || $user['status'] == 'paramedis'): ?>
               <li class="<?= ($uri=="pembayaran")?'active':''; ?>"><a class="nav-link" href="<?= base_url('pembayaran'); ?>"><ion-icon name="reorder-four" class="mr-4 ml-2"></ion-icon> <span>Pembayaran</span></a></li>
             <?php endif; ?>
             <li class="<?= ($uri=="riwayat")?'active':''; ?>"><a class="nav-link" href="<?= base_url('riwayat'); ?>"><ion-icon name="sync" class="mr-4 ml-2"></ion-icon> <span>Riwayat</span></a></li>
@@ -136,7 +136,7 @@ $uri = $this->uri->segment(1);
           </ul>
 
           <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-            
+
           </div>
         </aside>
       </div>
