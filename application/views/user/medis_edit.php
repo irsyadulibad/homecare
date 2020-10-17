@@ -3,7 +3,7 @@
 		<div class="card">
 			<div class="card-body">
 			<?= form_open(''); ?>
-				<input type="hidden" name="id" value="<?= $user['id_pengguna']; ?>">
+				<input type="hidden" name="id" value="<?= $user['id_medis']; ?>">
 				<div class="form-group">
 					<label>Nama Lengkap</label>
 					<input type="text" class="form-control" name="fullname" value="<?= $user['nama_lengkap'] ?>">
@@ -29,8 +29,8 @@
 				<div class="form-group">
 					<label>Plih Level</label>
 					<select name="level" class="form-control">
-						<option value="admin"  <?= $user['status'] == 'admin' ? 'selected' : ''; ?>>Admin</option>
-						<option value="user"  <?= $user['status'] == 'user' ? 'selected' : ''; ?>>User</option>
+						<option value="medis"  <?= $user['status'] == 'medis' ? 'selected' : ''; ?>>Medis</option>
+						<option value="paramedis"  <?= $user['status'] == 'paramedis' ? 'selected' : ''; ?>>Paramedis</option>
 					</select>
 				</div>
 				<div class="form-group">

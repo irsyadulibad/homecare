@@ -8,146 +8,184 @@ class User extends CI_Controller {
 		check_not_login();
 		check_admin();
 		$this->load->model('user_m');
+		$this->load->model('medis_m');
 		$this->load->library('form_validation');
-
-
 	}
-	public function index()
-	{
-		$data ['users'] = $this->user_m->get()->result_array();
-		$data['head'] = "Daftar Pengguna";
+	public function index(){
+		$data = [
+			'user' => $this->user_m->get(),
+			'medis' => $this->medis_m->get(),
+			'head' => "Daftar Pengguna"
+		];
+
 		$this->template->load('template2','user/user_data', $data);
-		
 	}
+
 	public function medis(){
 		$data ['users'] = $this->user_m->getmedis()->result_array();
 		$this->template->load('template2','user/usermedis', $data);
 	}
-	public function pengguna(){
-		$data ['users'] = $this->user_m->getpengguna()->result_array();
-		$this->template->load('template2','user/pengguna', $data);
-	}
+
 	public function add(){
 
-		$this->form_validation->set_rules('fullname', 'Nama', 'required');
-		$this->form_validation->set_rules('email', 'Email', 'required|is_unique[pengguna.email]');
-		$this->form_validation->set_rules('username', 'Username', 'required|is_unique[pengguna.nama_pengguna]');
-		$this->form_validation->set_rules('nohp', 'No. HP', 'required|min_length[10]');
-		$this->form_validation->set_rules('password', 'Password', 'required');
-		$this->form_validation->set_rules('passconf', 'Konfirmasi Password', 'required|matches[password]',
-		array(
-			'matches' => '%s. Tidak Sesuai Dengan Password')
-		);
-		$this->form_validation->set_rules('level', 'Level', 'required');
-
-		$this->form_validation->set_message('required', '%s Masih Kosong, Silahkan Diisi');
-		$this->form_validation->set_message('min_lenght', '{field} Silahkan Isi Lebih Dari Minimal');
-		$this->form_validation->set_message('is_unique', '{field} Ini Sudah Dipakai');
-
-
-
-		if ($this->form_validation->run() == FALSE)
-		{
+		if(!$this->form_validation->run('add_user')){
 			$this->template->load('template2','user/add_user');
-		}
-		else
-		{
-			$post = $this->input->post(null, TRUE);
-			$this->user_m->add($post);
-			if($this->db->affected_rows() > 0 ){
-				$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Pengguna berhasil ditambahkan']);
+		}else{
+			$res = $this->user_m->add();
+
+			if($res > 0 ){
+				$this->session->set_flashdata('swal', [
+					'type' => 'success',
+					'msg' => 'Pengguna berhasil ditambahkan'
+				]);
 			}else{
-				$this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Pengguna gagal ditambahkan']);
+				$this->session->set_flashdata('swal', [
+					'type' => 'error',
+					'msg' => 'Pengguna gagal ditambahkan'
+				]);
 			}
+
 			redirect('user');
 		}
 
 	}
+
 	public function edit($id){
+		$user = $this->user_m->get($id);
+		$is_pass = false;
 
-		$this->form_validation->set_rules('fullname', 'Nama', 'required');
-		$this->form_validation->set_rules('email', 'Email', 'required|callback_email_check');
-		$this->form_validation->set_rules('username', 'Username', 'required|callback_username_check');
-		if($this->input->post('password')){
-		$this->form_validation->set_rules('password', 'Password', '');
-		$this->form_validation->set_rules('passconf', 'Password Confirmation', 'matches[password]',
-		array(
-			'matches' => '%s. Tidak Sesuai Dengan Password')
-		);
-	}
-	if($this->input->post('passconf')){
-		$this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]',
-		array(
-			'matches' => '%s. Tidak Sesuai Dengan Password')
-		);
-	}
-		$this->form_validation->set_rules('level', 'Level', 'required');
-
-		$this->form_validation->set_message('required', '%s Masih Kosong, Silahkan Diisi');
-		$this->form_validation->set_message('min_lenght', '{field} Silahkan Isi Lebih Dari Minimal');
-		$this->form_validation->set_message('is_unique', '{field} Ini Sudah Dipakai');
-
-
-
-		if ($this->form_validation->run() == FALSE)
-		{
-			$query = $this->user_m->get($id)->row_array();
-			if(!is_null($query)){
-				$data ['user'] = $query;
-				$data['head'] = "Edit Akun Pengguna";
-				$this->template->load('template2','user/user_edit', $data);
-			}else {
-			echo "<script> alert('data tidak ditemukan disimpan');";
-			echo " window.location='".site_url('user')."';</script>";
-			}
-		}
-		else
-		{
-			$post = $this->input->post(null, TRUE);
-			$this->user_m->edit($post, $id);
-			if($this->db->affected_rows() > 0 ){
-				$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Data berhasil disimpan']);
+		if(!is_null($user)){
+			$pass = $this->input->post('password', true);
+		
+			if(strlen($pass) < 1){
+				$validation = $this->form_validation->run('edit_user');
 			}else{
-				$this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Data gagal disimpan']);
+				$is_pass = true;
+				$validation = $this->form_validation->run('edit_user_pass');
 			}
-				$prev =  $this->input->post('prev', true);
-				redirect("user/$prev");
+
+			if(!$validation){
+				$data = [
+					'user' => $user,
+					'head' => 'Edit Akun Pengguna'
+				];
+
+				$this->template->load('template2','user/user_edit', $data);
+			}else{
+				$res = $this->user_m->edit($id, $is_pass);
+
+				if($res > 0 ){
+					$this->session->set_flashdata('swal', [
+						'type' => 'success',
+						'msg' => 'Data berhasil diubah'
+					]);
+				}else{
+					$this->session->set_flashdata('swal', [
+						'type' => 'error',
+						'msg' => 'Data gagal diubah'
+					]);
+				}
+
+				redirect('user');
+			}
+
+		}else{
+			$this->session->set_flashdata('swal', [
+				'type' => 'error',
+				'msg' => 'Pengguna tidak ditemukan'
+			]);
+
+			redirect('user');
+		}
+	}
+
+	public function editmedis($id = null){
+		$user = $this->medis_m->get($id);
+		$is_pass = false;
+
+		if(!is_null($user)){
+			$pass = $this->input->post('password', true);
+		
+			if(strlen($pass) < 1){
+				$validation = $this->form_validation->run('edit_medis');
+			}else{
+				$is_pass = true;
+				$validation = $this->form_validation->run('edit_medis_pass');
+			}
+
+			if(!$validation){
+				$data = [
+					'user' => $user,
+					'head' => 'Edit Akun Pengguna'
+				];
+
+				$this->template->load('template2','user/medis_edit', $data);
+			}else{
+				$res = $this->medis_m->edit($id, $is_pass);
+
+				if($res > 0 ){
+					$this->session->set_flashdata('swal', [
+						'type' => 'success',
+						'msg' => 'Data berhasil diubah'
+					]);
+				}else{
+					$this->session->set_flashdata('swal', [
+						'type' => 'error',
+						'msg' => 'Data gagal diubah'
+					]);
+				}
+
+				redirect('user');
+			}
+
+		}else{
+			$this->session->set_flashdata('swal', [
+				'type' => 'error',
+				'msg' => 'Pengguna tidak ditemukan'
+			]);
+
+			redirect('user');
+		}
+	}
+
+	public function del($id=null){
+		$id = intval($id);
+		$res = $this->user_m->delete($id);
+
+		if($res > 0 ){
+			$this->session->set_flashdata('swal', [
+				'type' => 'success',
+				'msg' => 'Pengguna berhasil dihapus'
+			]);
+		}else{
+			$this->session->set_flashdata('swal', [
+				'type' => 'error',
+				'msg' => 'Pengguna gagal dihapus'
+			]);
 		}
 
+		redirect('user');
 	}
-	function username_check(){
-		$post = $this->input->post(null, TRUE);
-		$query= $this->db->query("SELECT * FROM pengguna WHERE nama_pengguna = '$post[username]' AND id_pengguna != '$post[user_id]'");
-		if($query->num_rows() > 0){
-			$this->form_validation->set_message('username_check', '{field} user ini Sudah Dipakai');
-			return FALSE;
-		}else {
-			return TRUE;
-		}
-	}
-	function email_check(){
-		$post = $this->input->post(null, TRUE);
-		$query= $this->db->query("SELECT * FROM pengguna WHERE email = '$post[email]' AND id_pengguna != '$post[user_id]'");
-		if($query->num_rows() > 0){
-			$this->form_validation->set_message('email_check', '{field} Email ini Sudah Dipakai');
-			return FALSE;
-		}else {
-			return TRUE;
-		}
-	}
-	public function del($id=null){
-		$user = $this->fungsi->user_login();
-		$prev = $this->input->get('prev', true);
-		if(is_null($id) || $user->role != 1) redirect('user');
-		$this->db->delete('pengguna', ['id_pengguna' => $id]);
-		if($this->db->affected_rows() > 0){
-			$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Pengguna berhasil dihapus']);
-			redirect("user/$prev");
+
+	public function delmedis($id = null){
+		$id = intval($id);
+		$res = $this->medis_m->delete($id);
+
+		if($res > 0 ){
+			$this->session->set_flashdata('swal', [
+				'type' => 'success',
+				'msg' => 'Medis berhasil dihapus'
+			]);
 		}else{
-			$this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Pengguna gagal dihapus']);
-			redirect("user/$prev");
+			$this->session->set_flashdata('swal', [
+				'type' => 'error',
+				'msg' => 'Medis gagal dihapus'
+			]);
 		}
+
+		redirect('user');
 	}
+
 	public function profile(){
 		$data ['row'] = $this->user_m->get();
 		$this->template->load('template','user/profile',$data);

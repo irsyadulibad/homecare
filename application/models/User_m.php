@@ -18,64 +18,62 @@ class User_m extends CI_Model {
       'id_pengguna' => $id
     ];
 
-    return $this->db->get_where($this->table, $data)->row_array();
+    if(is_null($id)){
+      return $this->db->get($this->table)->result_array();
+    }else{
+      return $this->db->get_where($this->table, $data)->row_array();
+    }
   }
 
   public function total(){
     return count($this->db->get('pengguna')->result_array());
   }
-  
-  public function getmedis($id = null){
-    $this->db->from('pengguna');
-    $this->db->where('role','2');
-    if($id != null){
-      $this->db->where('id_pengguna', $id);
-    }
-    $this->db->order_by('nama_pengguna', 'ASC');
-    $query = $this->db->get();
-    return $query;
 
-  }
-  public function getpengguna($id = null){
-    $this->db->from('pengguna');
-    $this->db->where('role','3');
-    if($id != null){
-      $this->db->where('id_pengguna', $id);
-    }
-    $this->db->order_by('nama_pengguna', 'ASC');
-    $query = $this->db->get();
-    return $query;
+  public function add(){
 
+    $status = $this->input->post('level', true);
+    $data = [
+      'nama_lengkap' => $this->input->post('fullname', true),
+      'no_hp' => $this->input->post('nohp', true),
+      'jenis_kelamin' => $this->input->post('jenkel', true),
+      'status' => $status,
+      'email' => $this->input->post('email', true),
+      'password' => sha1($this->input->post('password', true)),
+      'foto' => 'default.jpg'
+    ];
+
+    if($status == 'admin' || $status == 'user'){
+      $data['active'] = '1';
+
+      $this->db->insert('pengguna', $data);
+    }else{
+      $this->db->insert('medis', $data);
+    }
+
+    return $this->db->affected_rows();
   }
 
-  public function add($post){
-    $params ['nama_lengkap'] = $post['fullname'];
-    $params ['nama_pengguna'] = $post['username'];
-    $params ['password'] = sha1($post['password']);
-    $params ['no_hp'] = $post['nohp'];
-    $params ['email'] = $post['email'];
-    $params ['foto'] = "default.jpg";
-    $params ['jenis_kelamin'] = $post['jenkel'];
-    $params ['role'] = $post['level'];
-    $this->db->insert('pengguna',$params);
+  public function edit($id, $pass = false){
+    $data = [
+      'nama_lengkap' => $this->input->post('fullname', true),
+      'no_hp' => $this->input->post('nohp', true),
+      'jenis_kelamin' => $this->input->post('jenkel', true),
+      'status' => $this->input->post('level', true),
+      'email' => $this->input->post('email', true),
+    ];
+
+    if($pass) $data['password'] = sha1($this->input->post('password', true));
+
+    $this->db->update($this->table, $data, ['id_pengguna' => $id]);
+    return $this->db->affected_rows();
   }
-  public function edit($post, $id){
-    $params ['nama_lengkap'] = $post['fullname'];
-    $params ['nama_pengguna'] = $post['username'];
-    if(!empty($post['password'])){
-      $params ['password'] = sha1($post['password']);
-    }
-    $params ['no_hp'] = $post['nohp'];
-    $params ['email'] = $post['email'];
-    $params ['jenis_kelamin'] = $post['jenkel'];
-    $params ['role'] = $post['level'];
-    $this->db->where('id_pengguna', $id);
-    $this->db->update('pengguna',$params);
+
+  public function delete($id){
+    $this->db->delete($this->table, ['id_pengguna' => $id]);
+
+    return $this->db->affected_rows();
   }
-  public function del($id){
-    $this->db->where('id_pengguna',$id);
-    $this->db->delete('pengguna');
-  }
+
   public function _uploadImage()
   {
     $config['upload_path']          = './assets/images/profile/';

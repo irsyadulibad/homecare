@@ -1,21 +1,16 @@
 <?php
-	function role($id){
-		switch($id){
-			case 1:
-				return "Admin";
-			break;
-			case 2:
-				return "Medis";
-			break;
-			case 3:
-				return "User";
-			break;
-			case 4:
-				return "Dokter";
-			break;
-		}
-	}
+$users = [];
+
+foreach($user as $usr){
+	$users[] = $usr;
+}
+
+foreach($medis as $mds){
+	$users[] = $mds;
+}
+
 ?>
+
 <div class="row">
 	<div class="col-12">
 		<div class="card">
@@ -29,10 +24,10 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>Username</th>
 								<th>Nama Lengkap</th>
+								<th>No HP</th>
 								<th>Email</th>
-								<th>Role</th>
+								<th>Status</th>
 								<th>Aksi</th>
 							</tr>
 						</thead>
@@ -45,13 +40,18 @@
 							<?php foreach($users as $user): $i++;?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $user['nama_pengguna']; ?></td>
 								<td><?= $user['nama_lengkap']; ?></td>
+								<td><?= $user['no_hp']; ?></td>
 								<td><?= $user['email']; ?></td>
-								<td><?= role($user['role']); ?></td>
+								<td><?= $user['status']; ?></td>
 								<td>
+								<?php if($user['status'] == 'admin' || $user['status'] == 'user'): ?>
 									<a href="<?= base_url('user/edit/'.$user['id_pengguna']); ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
 									<a href="<?= base_url('user/del/'.$user['id_pengguna']); ?>" class="btn btn-sm btn-danger confirm-href"><i class="fas fa-trash-alt"></i> Hapus</a>
+								<?php else: ?>
+									<a href="<?= base_url('user/editmedis/'.$user['id_medis']); ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
+									<a href="<?= base_url('user/delmedis/'.$user['id_medis']); ?>" class="btn btn-sm btn-danger confirm-href"><i class="fas fa-trash-alt"></i> Hapus</a>
+								<?php endif; ?>
 								</td>
 							</tr>
 							<?php endforeach; ?>

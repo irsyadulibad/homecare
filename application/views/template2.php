@@ -82,8 +82,6 @@ $uri = $this->uri->segment(1);
                 <ul class="dropdown-menu">
                   <li><a class="nav-link" href="<?= base_url('user/add'); ?>">Tambah Pengguna</a></li>
                   <li><a class="nav-link" href="<?= base_url('user'); ?>">Semua Pengguna</a></li>
-                  <li><a class="nav-link" href="<?= base_url('user/medis'); ?>">Paramedis</a></li>
-                  <li><a class="nav-link" href="<?= base_url('user/pengguna'); ?>">Akun Pengguna</a></li>
                 </ul>
               </li>
             <?php endif; ?>

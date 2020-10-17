@@ -9,11 +9,6 @@
 					<small class="text-danger"><?= form_error('fullname'); ?></small>
 				</div>
 				<div class="form-group">
-					<label>Username</label>
-					<input type="text" class="form-control" name="username" value="<?= set_value('username'); ?>">
-					<small class="text-danger"><?= form_error('username'); ?></small>
-				</div>
-				<div class="form-group">
 					<label>Email</label>
 					<input type="email" class="form-control" name="email" value="<?= set_value('email'); ?>">
 					<small class="text-danger"><?= form_error('email'); ?></small>
@@ -33,10 +28,10 @@
 				<div class="form-group">
 					<label>Plih Level</label>
 					<select name="level" class="form-control">
-						<option value="1"  <?= set_value('level') == 1 ? 'selected' : ''; ?>>Admin</option>
-						<option value="2"  <?= set_value('level') == 2 ? 'selected' : ''; ?>>Medis</option>
-						<option value="4"  <?= set_value('level') == 4 ? 'selected' : ''; ?>>Dokter</option>
-						<option value="3"  <?= set_value('level') == 3 ? 'selected' : ''; ?>>Pengguna</option>
+						<option value="admin"  <?= set_value('level') == 'admin' ? 'selected' : ''; ?>>Admin</option>
+						<option value="medis"  <?= set_value('level') == 'medis' ? 'selected' : ''; ?>>Medis</option>
+						<option value="paramedis"  <?= set_value('level') == 'paramedis' ? 'selected' : ''; ?>>Paramedis</option>
+						<option value="user"  <?= set_value('level') == 'user' ? 'selected' : ''; ?>>User</option>
 					</select>
 				</div>
 				<div class="form-group">

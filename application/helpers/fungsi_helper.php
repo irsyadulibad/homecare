@@ -16,10 +16,11 @@ function check_not_login(){
 function check_admin(){
   $ci =& get_instance();
   $ci->load->library('fungsi');
-  if($ci->fungsi->user_login()->role != 1 ){
+
+  $user = $ci->fungsi->user_login();
+  if($user['status'] != 'admin' ){
     redirect('homecare');
   }
-
 }
 function check_user(){
   $ci =& get_instance();
