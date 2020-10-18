@@ -19,6 +19,13 @@
 					<small class="text-danger"><?= form_error('harga'); ?></small>
 				</div>
 				<div class="form-group">
+					<label for="status">Status</label>
+					<select name="status" id="status" class="form-control">
+						<option value="medis">Medis</option>
+						<option value="paramedis">Paramedis</option>
+					</select>
+				</div>
+				<div class="form-group">
 					<button type="submit" name="submit" class="btn btn-primary float-right"><i class="fas fa-save"></i> Simpan</button>
 				</div>
 			</form>

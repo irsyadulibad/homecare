@@ -1,3 +1,6 @@
+<?php
+$status = $layanan['status'];
+?>
 <div class="row justify-content-center">
 	<div class="col-12 col-md-6 col-lg-6">
 		<div class="card">
@@ -17,6 +20,13 @@
 					<label>Harga</label>
 					<input type="number" class="form-control" name="harga" value="<?= $layanan['harga'] ?>">
 					<small class="text-danger"><?= form_error('harga'); ?></small>
+				</div>
+				<div class="form-group">
+					<label for="status">Status</label>
+					<select name="status" id="status" class="form-control">
+						<option value="medis" <?= $status == 'medis' ? 'selected' : ''; ?>>Medis</option>
+						<option value="paramedis" <?= $status == 'paramedis' ? 'selected' : ''; ?>>Paramedis</option>
+					</select>
 				</div>
 				<div class="form-group">
 					<button type="submit" name="submit" class="btn btn-primary float-right"><i class="fas fa-save"></i> Simpan</button>

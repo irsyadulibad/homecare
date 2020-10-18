@@ -200,5 +200,18 @@ $config = [
 			'label' => 'Harga Obat',
 			'rules' => 'required|is_numeric'
 		]
+	],
+
+	'validation_layanan' => [
+		[
+			'field' => 'jenis_layanan',
+			'label' => 'Jenis Layanan',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'harga',
+			'label' => 'Harga',
+			'rules' => 'required|is_numeric'
+		]
 	]
 ];
