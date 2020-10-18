@@ -169,5 +169,36 @@ $config = [
 			'label' => 'Konfirmasi Password',
 			'rules' => 'required|matches[password]'
 		]
+	],
+
+	'tambah_obat' => [
+		[
+			'field' => 'name',
+			'label' => 'Nama Obat',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'price',
+			'label' => 'Harga Obat',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'stock',
+			'label' => 'Stok Obat',
+			'rules' => 'required|is_numeric'
+		]
+	],
+
+	'edit_obat' => [
+		[
+			'field' => 'name',
+			'label' => 'Nama Obat',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'price',
+			'label' => 'Harga Obat',
+			'rules' => 'required|is_numeric'
+		]
 	]
 ];

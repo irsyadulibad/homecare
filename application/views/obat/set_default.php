@@ -36,7 +36,7 @@
 				<h6 class="text-center">Data masih kosong</h6>
 			<?php else: ?>
 				<?php foreach($layobs as $layob): ?>
-				<span class="badge badge-primary btn-del-layob mr-2 mb-2" data-id="<?= $layob['id']; ?>" data-layanan="<?= $layob['id_layanan']; ?>"><span class=""><i class="fas fa-times-circle mr-2"></i></span> <?= $layob['nama']; ?></span>
+				<span class="badge badge-primary btn-del-layob mr-2 mb-2" data-id="<?= $layob['id_obat_layanan']; ?>" data-layanan="<?= $layob['id_layanan']; ?>"><span class=""><i class="fas fa-times-circle mr-2"></i></span> <?= $layob['nama']; ?></span>
 				<?php endforeach; ?>
 			<?php endif; ?>
 			</div>

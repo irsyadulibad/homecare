@@ -2,13 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Obat_m extends CI_Model {
-	public function getObat($id=null){
-		$this->db->select('*');
-		$this->db->from('obat');
-		if(!is_null($id)) $this->db->where('id_obat', $id);
+	private $table = 'obat';
+
+	public function getObat($id = false){
 		$this->db->order_by('nama', 'ASC');
-		$result = $this->db->get();
-		return (is_null($id)) ? $result->result_array() : $result->row_array();
+
+		if(!$id){
+			return $this->db->get($this->table)->result_array();
+		}else{
+			$this->db->where('id_obat', $id);
+			return $this->db->get($this->table)->row_array();
+		}
 	}
 
 	public function add(){
@@ -26,22 +30,28 @@ class Obat_m extends CI_Model {
 	}
 
 	public function edit($id){
-		$name = $this->input->post('name', true);
-		$price = $this->input->post('price', true);
+		$data = [
+			'nama' => $this->input->post('name', true), 
+			'harga' => $this->input->post('price', true)
+		];
 
-		$data = ['nama' => $name, 'harga' => $price];
 		$this->db->update('obat', $data, ['id_obat' => $id]);
 		return $this->db->affected_rows();
 	}
 
-	public function uStock($id){
-		$stock = $this->input->post('stock', true);
-		$this->db->update('obat', ['stok' => $stock], ['id_obat' => $id]);
+	public function delete($id){
+		$this->db->delete($this->table, ['id_obat' => $id]);
+
 		return $this->db->affected_rows();
 	}
 
-	public function getLayanan(){
-		return $this->db->get('layanan')->result_array();
+	public function uStock($id){
+		$data = [
+			'stok' => $this->input->post('stock', true)
+		];
+		
+		$this->db->update($this->table, $data, ['id_obat' => $id]);
+		return $this->db->affected_rows();
 	}
 
 	public function cek_stok(){
@@ -75,25 +85,49 @@ class Obat_m extends CI_Model {
 	}
 
 	public function set_default($id, $obat){
-		$exist = $this->db->get_where('lay_ob', ['id_layanan' => $id, 'id_obat' => $obat])->row_array();
-		if(!empty($exist)) return ['status' => 'error', 'msg' => 'Obat sudah default'];
+		$exist = $this->db->get_where('obat_layanan', [
+			'id_layanan' => $id,
+			'id_obat' => $obat
+		])->row_array();
+
+		if(!empty($exist)) return [
+			'status' => 'error',
+			'msg' => 'Obat sudah default'
+		];
+
 		$data = [
 			'id_layanan' => $id,
 			'id_obat' => $obat
 		];
-		$this->db->insert('lay_ob', $data);
+
+		$this->db->insert('obat_layanan', $data);
+
 		if($this->db->affected_rows() > 0){
 			$items = $this->get_default_relation($id);
-			return ['status' => 'success', 'msg' => 'Berhasil menambah data', 'items' => $items];
+			return [
+				'status' => 'success',
+				'msg' => 'Berhasil menambah data',
+				'items' => $items
+			];
 		}else{
-			return ['status' => 'error', 'msg' => 'Gagal menyimpan data'];
+			return [
+				'status' => 'error',
+				'msg' => 'Gagal menyimpan data'
+			];
 		}
 	}
 
-	public function get_default_relation($id_layanan=null){
-		$this->db->select('id, id_layanan, lay_ob.id_obat, obat.nama');
-		$this->db->from('lay_ob');
-		$this->db->join('obat', 'lay_ob.id_obat = obat.id_obat');
+	public function delete_default($id){
+		$this->db->delete('obat_layanan', ['id_obat_layanan' => $id]);
+
+		return $this->db->affected_rows();
+	}
+
+	public function get_default_relation($id_layanan = null){
+		$this->db->select('obat.id_obat, id_layanan, layob.id_obat_layanan, layob.id_obat, obat.nama');
+		$this->db->from('obat_layanan as layob');
+		$this->db->join('obat', 'layob.id_obat = obat.id_obat');
+
 		if(!is_null($id_layanan)) $this->db->where('id_layanan', $id_layanan);
 		return $this->db->get()->result_array();
 	}
