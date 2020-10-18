@@ -8,66 +8,89 @@ class Ongkir extends CI_Controller {
 		check_admin();
 		$this->load->model('ongkir_m');
 		$this->load->model('pesanan_m');
-		$this->load->model('Daerah_m', 'daerah');
+		$this->load->model('daerah_m');
 	}
 
 	public function index(){
-		$data['ongkirs'] = $this->ongkir_m->get_ongkir();
-		$data['provinsi'] = $this->daerah->get_provinsi();
-		$data['modal'] = 'ongkir';
+		$data = [
+			'ongkirs' => $this->ongkir_m->get(),
+			'provinsi' => $this->daerah_m->get_provinsi(),
+			'modal' => 'ongkir'
+		];
+		
 		$this->template->load('template2', 'ongkir/index', $data);
 	}
 
 	public function tambah(){
-		$this->form_validation->set_rules('provinsi', 'Provinsi', 'required');
-		$this->form_validation->set_rules('kota', 'Kota', 'required');
-		$this->form_validation->set_rules('kecamatan', 'Kecamatan', 'required');
-		$this->form_validation->set_rules('tarif', 'tarif', 'required');
-
-		if($this->form_validation->run() == false){
+		if(!$this->form_validation->run('validasi_ongkir')){
 			$this->session->set_flashdata('form_err', validation_errors());
 		}else{
-			if($this->ongkir_m->tambah() > 0){
-				$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Ongkir berhasil disimpan']);
+			$res = $this->ongkir_m->tambah();
+
+			if($res > 0){
+				$this->session->set_flashdata('swal', [
+					'type' => 'success',
+					'msg' => 'Biaya berhasil disimpan'
+				]);
 			}else{
-				$this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Ongkir gagal disimpan']);
+				$this->session->set_flashdata('swal', [
+					'type' => 'error',
+					'msg' => 'Biaya gagal disimpan'
+				]);
 			}
 		}
+
 		redirect('ongkir');
 	}
 
-	public function edit(){
-		$id = $this->input->post('id', true);
-		$tarif = $this->input->post('tarif', true);
+	public function edit($id = null){
+		$ongkir = $this->ongkir_m->get($id);
+		if(is_null($ongkir)) redirect('ongkir');
 
-		$this->db->update('ongkir', ['tarif' => $tarif], ['id' => $id]);
+		if(!$this->form_validation->run('validasi_ongkir')){
+			$data = [
+				'ongkir' => $ongkir,
+				'head' => 'Edit Data Biaya'
+			];
 
-		if($this->db->affected_rows() > 0){
-			$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Data berhasil disimpan']);
+			$this->template->load('template2', 'ongkir/edit', $data);
 		}else{
-			$this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Data gagal disimpan']);
+			$res = $this->ongkir_m->edit($id);
+
+			if($res > 0){
+				$this->session->set_flashdata('swal', [
+					'type' => 'success',
+					'msg' => 'Data berhasil disimpan'
+				]);
+			}else{
+				$this->session->set_flashdata('swal', [
+					'type' => 'error',
+					'msg' => 'Data gagal disimpan'
+				]);
+			}
+
+			redirect('ongkir');
 		}
-		redirect('ongkir');
 	}
 
 	public function hapus($id=null){
-		if(is_null($id)) redirect('ongkir');
-		$this->db->delete('ongkir', ['id' => $id]);
-		if($this->db->affected_rows() > 0){
-			$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Data berhasil disimpan']);
-		}else{
-			$this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Data gagal disimpan']);
-		}
-		redirect('ongkir');
-	}
+		$ongkir = $this->ongkir_m->get($id);
+		if(is_null($ongkir)) redirect('ongkir');
 
-	public function get_ongkir(){
-		$id = $this->input->post('id', true);
-		$ongkir = $this->ongkir_m->get_ongkir($id)[0];
-		if(empty($ongkir)){
-			echo '<h1 class="text-center">Data tidak dapat ditemukan</h1>';
+		$res = $this->ongkir_m->delete($id);
+
+		if($res > 0){
+			$this->session->set_flashdata('swal', [
+				'type' => 'success',
+				'msg' => 'Data berhasil dihapus'
+			]);
 		}else{
-			echo $this->ongkir_m->get_ongkir_html($ongkir);
+			$this->session->set_flashdata('swal', [
+				'type' => 'error',
+				'msg' => 'Data gagal dihapus'
+			]);
 		}
+
+		redirect('ongkir');
 	}
 }

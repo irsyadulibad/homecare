@@ -105,9 +105,9 @@ $uri = $this->uri->segment(1);
                 </ul>
               </li>
               <li class="nav-item dropdown <?= ($uri=="ongkir")?'active':''; ?>">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-shipping-fast"></i> <span>Ongkos Kirim</span></a>
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-shipping-fast"></i> <span>Biaya Jalan</span></a>
                 <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="<?= base_url('ongkir'); ?>">Daftar Ongkir</a></li>
+                  <li><a class="nav-link" href="<?= base_url('ongkir'); ?>">Daftar Biaya</a></li>
                 </ul>
               </li>
             <?php endif; ?>

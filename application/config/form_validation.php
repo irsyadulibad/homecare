@@ -213,5 +213,23 @@ $config = [
 			'label' => 'Harga',
 			'rules' => 'required|is_numeric'
 		]
+	],
+
+	'validasi_ongkir' => [
+		[
+			'field' => 'jarak_awal',
+			'label' => 'Jarak Awal',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'jarak_akhir',
+			'label' => 'Jarak Akhir',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'biaya',
+			'label' => 'Biaya',
+			'rules' => 'required|is_numeric'
+		]
 	]
 ];

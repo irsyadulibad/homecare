@@ -17,10 +17,9 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>Provinsi</th>
-								<th>Kota</th>
-								<th>Kecamatan</th>
-								<th>Tarif</th>
+								<th>Jarak Awal</th>
+								<th>Jarak Akhir</th>
+								<th>Biaya</th>
 								<th>Aksi</th>
 							</tr>
 						</thead>
@@ -33,13 +32,16 @@
 							<?php foreach($ongkirs as $ongkir): $i++;?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $this->daerah->get_provinsi($ongkir['id_provinsi'])->nama; ?></td>
-								<td><?= $this->daerah->kota($ongkir['id_kota'])->nama; ?></td>
-								<td><?= $this->daerah->kecamatan($ongkir['id_kecamatan'])->nama; ?></td>
-								<td>Rp.<?= number_format($ongkir['tarif'],0,',','.'); ?></td>
+								<td><?= $ongkir['jarak_awal']; ?></td>
+								<td><?= $ongkir['jarak_akhir']; ?></td>
+								<td><?= $ongkir['biaya']; ?></td>
 								<td>
-									<button data-id="<?= $ongkir['id']; ?>" class="btn btn-sm btn-primary btn-edit-ongkir" data-toggle="modal" data-target="#editOngkirModal"><i class="fas fa-edit"></i> Edit</button>
-									<a href="<?= base_url('ongkir/hapus/'.$ongkir['id']); ?>?prev=" class="btn btn-sm btn-danger confirm-href"><i class="fas fa-trash-alt"></i> Hapus</a>
+									<a class="btn btn-sm btn-primary" href="<?= base_url('ongkir/edit/'.$ongkir['id_biayajalan']); ?>">
+										<i class="fas fa-edit"></i> Edit
+									</a>
+									<a href="<?= base_url('ongkir/hapus/'.$ongkir['id_biayajalan']); ?>?prev=" class="btn btn-sm btn-danger confirm-href">
+										<i class="fas fa-trash-alt"></i> Hapus
+									</a>
 								</td>
 							</tr>
 							<?php endforeach; ?>
