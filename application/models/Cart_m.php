@@ -20,7 +20,15 @@ class Cart_m extends CI_Model{
 
   public function add($layanan){
     $rowid = $this->input->post('rowid', true);
+    $status = $this->check_status($layanan['status']);
     $exist = $this->check_stock($layanan['id_layanan']);
+
+    if(!$status['status']){
+      return [
+        'status' => 'error',
+        'msg' => $status['msg']
+      ];
+    }
 
     if(!$exist['status']){
       return [
@@ -134,6 +142,30 @@ class Cart_m extends CI_Model{
     }
   }
 
+  private function check_status($status){
+    $this->load->model('layanan_m');
+    $carts = $this->cart->contents();
+    $statuses = [];
+
+    if(empty($carts)) return ['status' => true];
+
+    foreach($carts as $cart){
+      $layanan = $this->layanan_m->get($cart['id']);
+      $statuses[] = $layanan['status'];
+    }
+
+    if(in_array($status, $statuses)){
+      return [
+        'status' => true
+      ];
+    }else{
+      return [
+        'status' => false,
+        'msg' => 'Maaf... Anda Hanya Bisa Menambahkan Layanan Yang Ditangani Oleh '.$statuses[0].' Saja... Jika Ingin Menambahkan Layanan Ini, Hapus Semua Layanan Yang Ada Di Cart Terlebih Dahulu!'
+      ];
+    }
+  }
+
   private function validate_name($name){
     $name = str_replace('(', '- --', $name);
     $name = str_replace(')', '-- -', $name);
@@ -148,6 +180,7 @@ class Cart_m extends CI_Model{
 
   public function show(){
     $carts = $this->cart->contents();
+    $content = '';
 
     if(empty($carts)){
 
@@ -162,7 +195,7 @@ class Cart_m extends CI_Model{
     }else{
       foreach($carts as $cart){
         $name = $this->reverse_name($cart['name']);
-        $content = '
+        $content .= '
           <tr>
             <td>'.$name.'</td>
             <td>'.$cart['qty'].'</td>
