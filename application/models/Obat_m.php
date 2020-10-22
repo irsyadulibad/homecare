@@ -58,10 +58,10 @@ class Obat_m extends CI_Model {
 		$id = $this->input->post('id', true);
 		$sess = $this->session->userdata('obat');
 		$stocks = [];
-		$obats = $this->db->get_where('lay_ob', ['id_layanan' => $id])->result_array();
+		$obats = $this->db->get_where('obat_layanan', ['id_layanan' => $id])->result_array();
 		foreach($obats as $obat){
 			$id_obat = intval($obat['id_obat']);
-			$stock = $this->db->get_where('obat', ['id_obat' => $obat['id_obat']])->row_array()['stok'];
+			$stock = $this->db->get_where($this->table, ['id_obat' => $obat['id_obat']])->row_array()['stok'];
 			$stocks[] = isset($sess[$id_obat]) ? $stock - $sess[$id_obat] : $stock;
 		}
 		foreach ($stocks as $stock) {
@@ -124,7 +124,7 @@ class Obat_m extends CI_Model {
 	}
 
 	public function get_default_relation($id_layanan = null){
-		$this->db->select('obat.id_obat, id_layanan, layob.id_obat_layanan, layob.id_obat, obat.nama');
+		$this->db->select('obat.id_obat, id_layanan, layob.id_obat_layanan, layob.id_obat, obat.nama, obat.stok');
 		$this->db->from('obat_layanan as layob');
 		$this->db->join('obat', 'layob.id_obat = obat.id_obat');
 

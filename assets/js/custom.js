@@ -49,44 +49,21 @@ $(document).ready(function(){
   }
   $('#id_pasien').select2();
   $('.obat').select2();
+
   $('.add-cart').click(function(){
-    let idlayanan = $(this).data('id');
-    let rowid = $(this).attr('data-rowid');
-    let btn = $(this);
+    const btn = $(this);
     $.ajax({
-      url: baseUrl+'obat/cek_json',
+      url: baseUrl + 'cart/add',
       method: 'post',
-      data: {id: idlayanan, rowid: rowid},
+      data: {id: btn.data('id'), rowid: btn.data('rowid')},
       dataType: 'json',
-      success: function(e){
-        if(e.stok < 1){
-          Swal.fire({
-            icon: 'error',
-            text: 'Stok obat habis untuk layanan ini'
-          });
-          
+      success: function(data){
+        if(data.status == 'success'){
+          toastr['success'](data.msg);
+          btn.attr('data-rowid', data.rowid);
         }else{
-          $.ajax({
-            url: baseUrl+'cart/add_to_cart',
-            method: 'post',
-            data: {id_layanan: idlayanan, rowid: rowid},
-            dataType: 'json',
-            success: function(e){
-              if(e.status == 'success'){
-                btn.attr('data-rowid', e.rowid);
-                toastr["success"]("Berhasil Menambahkan ke Cart");
-              }else{
-                Swal.fire({
-                  icon: 'error',
-                  text: e.msg
-                });
-              }
-            }
-          });
+          toastr['error'](data.msg);
         }
-      },
-      error: function(data){
-        console.warn(data.responseText);
       }
     });
   });
@@ -95,7 +72,7 @@ $(document).ready(function(){
     let cartContent = $('#cart-content');
     cartContent.html('<h1 class="text-center"><i class="fas fa-spinner fa-pulse"></i></h1>');
     $.ajax({
-      url: baseUrl+'cart/load_cart',
+      url: baseUrl+'cart/show_html',
       success: function(data){
         cartContent.html(data);
       }
@@ -107,7 +84,7 @@ $(document).ready(function(){
     let id = $(this).data('id');
     $(this).html('<i class="fas fa-spinner fa-pulse"></i> Loading');
     $.ajax({
-      url: baseUrl+'cart/hapus_cart',
+      url: baseUrl+'cart/delete',
       method: 'post',
       data: {rowid: rowid, id, id},
       success: function(data){
