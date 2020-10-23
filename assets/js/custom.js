@@ -93,13 +93,13 @@ $(document).ready(function(){
     });
   });
 
-  $("#kota").remoteChained({
+  $("#kabupaten").remoteChained({
     parents : "#provinsi",
-    url : baseUrl+'chained/get_kota'
+    url : baseUrl+'chained/get_kabupaten'
   });
 
   $("#kecamatan").remoteChained({
-    parents : "#kota",
+    parents : "#kabupaten",
     url : baseUrl+'chained/get_kecamatan'
   });
 

@@ -6,35 +6,35 @@ class Chained extends CI_Controller {
    public function __construct()
    {
       parent::__construct();
-      $this->load->model('Daerah_m', 'model');
+      $this->load->model('daerah_m');
    }
 
    public function index()
    {
-      $data['provinsi'] = $this->model->get_provinsi();
+      $data['provinsi'] = $this->daerah_m->get_provinsi();
       $this->load->view('dropdown_chained', $data);
    }
 
-   public function get_kota()
+   public function get_kabupaten()
    {
       $provinsi = $this->input->get('provinsi', true);
-      $kota = $this->model->get_kota($provinsi);
+      $kabupaten = $this->daerah_m->get_kabupaten($provinsi);
       $json = [];
 
-      foreach($kota as $kt){
-         $json[$kt->id_kota] = $kt->nama;
+      foreach($kabupaten as $kt){
+         $json[$kt['id_kabupaten']] = $kt['nama'];
       }
       echo json_encode($json);
    }
 
    public function get_kecamatan()
    {
-      $kota = $this->input->get('kota', true);
-      $kecamatan = $this->model->get_kecamatan($kota);
+      $kabupaten = $this->input->get('kabupaten', true);
+      $kecamatan = $this->daerah_m->get_kecamatan($kabupaten);
       $json = [];
 
       foreach($kecamatan as $kec){
-         $json[$kec->id] = $kec->nama;
+         $json[$kec['id_kecamatan']] = $kec['nama'];
       }
       echo json_encode($json);
    }
@@ -42,11 +42,11 @@ class Chained extends CI_Controller {
    public function get_desa()
    {
       $kecamatan = $this->input->get('kecamatan', true);
-      $desa = $this->model->get_desa($kecamatan);
+      $desa = $this->daerah_m->get_desa($kecamatan);
       $json = [];
 
       foreach($desa as $des){
-         $json[$des->id] = $des->nama;
+         $json[$des['id_desa']] = $des['nama'];
       }
       echo json_encode($json);
    }

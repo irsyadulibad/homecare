@@ -231,5 +231,74 @@ $config = [
 			'label' => 'Biaya',
 			'rules' => 'required|is_numeric'
 		]
+	],
+
+	'edit_profile' => [
+		[
+			'field' => 'fullname',
+			'label' => 'Nama Lengkap',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'email',
+			'label' => 'Email',
+			'rules' => 'required|valid_email'
+		],
+		[
+			'field' => 'gender',
+			'label' => 'Jenis Kelamin',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'phone',
+			'label' => 'No HP',
+			'rules' => 'required|is_numeric'
+		]
+	],
+
+	'edit_profile_pass' => [
+		[
+			'field' => 'old-pass',
+			'label' => 'Password',
+			'rules' => 'required|min_length[4]'
+		],
+		[
+			'field' => 'new-pass',
+			'label' => 'Password Baru',
+			'rules' => 'required|min_length[4]'
+		],
+		[
+			'field' => 'confirm-pass',
+			'label' => 'Konfirmasi Password',
+			'rules' => 'required|matches[new-pass]'
+		]
+	],
+
+	'edit_profile_addr' => [
+		[
+			'field' => 'provinsi',
+			'label' => 'Provinsi',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'kabupaten',
+			'label' => 'Kabupaten',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'kecamatan',
+			'label' => 'Kecamatan',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'desa',
+			'label' => 'Desa',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'alamat',
+			'label' => 'Alamat',
+			'rules' => 'required'
+		]
 	]
 ];
