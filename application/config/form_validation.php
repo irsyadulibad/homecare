@@ -30,7 +30,7 @@ $config = [
 		[
 			'field' => 'password',
 			'label' => 'Password',
-			'rules' => 'required|min_length[8]'
+			'rules' => 'required|min_length[4]'
 		],
 		[
 			'field' => 'passconf',

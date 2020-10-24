@@ -69,4 +69,7 @@ class Profile extends CI_Controller{
 
 	}
 	
+	public function test(){
+		var_dump($this->alamat_m->max_id());
+	}
 }

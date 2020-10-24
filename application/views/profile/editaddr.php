@@ -71,7 +71,7 @@ if(!is_null($alamat)){
                   <small class="text-danger"><?= form_error('kecamatan') ?></small>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="desa">Konfirmasi</label>
+                  <label for="desa">Desa</label>
                   <select name="desa" id="desa" class="form-control">
                     <?php foreach($desa as $des): ?>
                     <option <?= ($des['id_desa'] == $alamat['id_desa']) ? 'selected' : ''; ?> value="<?= $des['id_desa'] ?>"><?= $des['nama']; ?></option>
@@ -116,7 +116,7 @@ if(!is_null($alamat)){
                   <small class="text-danger"><?= form_error('kecamatan') ?></small>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="desa">Konfirmasi</label>
+                  <label for="desa">Desa</label>
                   <select name="desa" id="desa" class="form-control">
                     <option value="">--Pilih Desa--</option>
                   </select>

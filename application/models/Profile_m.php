@@ -106,7 +106,38 @@ class Profile_m extends CI_Model{
 	}
 
 	public function editaddr($user){
+		$data = [
+			'id_provinsi' => $this->input->post('provinsi', true),
+			'id_kabupaten' => $this->input->post('kabupaten', true),
+			'id_kecamatan' => $this->input->post('kecamatan', true),
+			'id_desa' => $this->input->post('desa', true),
+			'alamat' => $this->input->post('alamat', true),
+		];
+
+		$geo = $this->getLatLong($data['id_provinsi'], $data['id_kabupaten'], $data['id_kecamatan'], $data['id_desa']);
+
+		if(!$geo['status']){
+			return [
+				'type' => 'error',
+				'msg' => $geo['msg']
+			];
+		}else{
+			$data['latitude'] = $geo['data'][0]['lat'];
+			$data['longtitude'] = $geo['data'][0]['lon'];
+		}
+
+		$this->do_edit($user, $data);
+
+		return [
+			'type' => 'success',
+			'msg' => 'Alamat berhasil diubah'
+		];
+	}
+
+	private function do_edit($user, $data){
 		$id = $user['id_alamat'];
+
+		// Mendapatkan status dan user id
 		if($user['status'] == 'admin' || $user['status'] == 'user'){
 			$status = 'user';
 			$uid = $user['id_pengguna'];
@@ -115,24 +146,22 @@ class Profile_m extends CI_Model{
 			$uid = $user['id_medis'];
 		}
 
-		$data = [
-			'id_alamat' => $uid + 50,
-			'id_provinsi' => $this->input->post('provinsi', true),
-			'id_kabupaten' => $this->input->post('kabupaten', true),
-			'id_kecamatan' => $this->input->post('kecamatan', true),
-			'id_desa' => $this->input->post('desa', true),
-			'alamat' => $this->input->post('alamat', true),
-		];
-
+		// Jika id_alamat pada tabel tidak bernilai null
+		// Langsung update data pada tabel alamat_pengguna
 		if(!is_null($user['id_alamat'])){
 			$this->db->update('alamat_pengguna', $data, [
 				'id_alamat' => $id
 			]);
+		// Menambah data pada tabel alamat dan mengupdate field pada tabel user
 		}else{
+			$aid = $this->alamat_m->max_id() + 1;
+			$data['id_alamat'] = $aid;
+
 			$this->db->insert('alamat_pengguna', $data);
 
+			// Menimpa var data agar bernilai id_alamat saja
 			$data = [
-				'id_alamat' => $uid + 50
+				'id_alamat' => $aid
 			];
 
 			if($status == 'user'){
@@ -144,12 +173,32 @@ class Profile_m extends CI_Model{
 					'id_medis' => $uid
 				]);
 			}
-
 		}
-		echo $this->db->last_query();
-		return [
-			'type' => 'success',
-			'msg' => 'Alamat berhasil diubah'
-		];
+
+		return true;
+	}
+
+	public function getLatLong($prov, $kab, $kec, $des){
+		$prov = $this->daerah_m->get_provinsi($prov)['nama'];
+		$kab = $this->daerah_m->kabupaten($kab)['nama'];
+		$kec = $this->daerah_m->kecamatan($kec)['nama'];
+		$des = $this->daerah_m->desa($des)['nama'];
+		$kab = str_replace('KABUPATEN', '', $kab);
+
+		$alamat = "$des-$kec-$kab-$prov-INDONESIA";
+		$geo = $this->alamat_m->get_geocode($alamat);
+
+		if(!$geo['status']){
+			return [
+				'status' => false,
+				'msg' => $geo['msg']
+			];
+		}else{
+			return [
+				'status' => true,
+				'data' => $geo['data']
+			];
+		}
+
 	}
 }

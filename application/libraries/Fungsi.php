@@ -32,11 +32,11 @@ Class Fungsi {
       return $addr;
     }else if($type = 'str'){
       $this->ci->load->model('Daerah_m', 'daerah');
-      $des = $this->ci->daerah->desa($addr->desa)->nama;
-      $kec = $this->ci->daerah->kecamatan($addr->kecamatan)->nama;
-      $kot = $this->ci->daerah->kota($addr->kota)->nama;
-      $prov = $this->ci->daerah->get_provinsi($addr->provinsi)->nama;
-      $addr = $addr->alamat;
+      $des = $this->ci->daerah->desa($addr['id_desa'])['nama'];
+      $kec = $this->ci->daerah->kecamatan($addr['id_kecamatan'])['nama'];
+      $kot = $this->ci->daerah->kabupaten($addr['id_kabupaten'])['nama'];
+      $prov = $this->ci->daerah->get_provinsi($addr['id_provinsi'])['nama'];
+      $addr = $addr['alamat'];
       return "$addr, $des - $kec - $kot - $prov";
     }
   }
