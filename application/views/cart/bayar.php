@@ -6,11 +6,11 @@ $addr = explode(',', $fullAddr);
   <div class="col-md-6">
     <div class="card">
       <div class="card-body">
-        <?= form_open_multipart(); ?>
+      <?= form_open(); ?>
         <div class="form-group">
+          <input type="hidden" value="<?= $user['id_pengguna']; ?>" name="id">
           <label for="fullname">Nama Pasien</label>
           <input type="text" class="form-control" id="fullname" value="<?= $user['nama_lengkap']; ?>" disabled>
-          <small class="text-danger"><?= form_error('fullname'); ?></small>
         </div>
         <div class="form-group">
           <div class="card border">
@@ -24,12 +24,8 @@ $addr = explode(',', $fullAddr);
             </div>
           </div>
         </div>
-        <div class="form-group m-0">
-          <small>*Cek ketersediaan untuk memastikan daerah anda telah tercover layanan kami</small>
-        </div>
         <div class="form-group">
-          <button type="button" class="btn btn-info coverage-check" data-kec="<?= $user['id_alamat']; ?>"><i class="fas fa-exclamation-circle"></i> Cek Ketersediaan</button>
-          <button class="btn btn-success float-right" type="submit"><i class="fas fa-check"></i> Simpan</button>
+          <button class="btn btn-success float-right" type="submit"><i class="fas fa-check"></i> Checkout</button>
         </div>
       </form>
     </div>

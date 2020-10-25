@@ -172,7 +172,7 @@ class Cart_m extends CI_Model{
     return $name;
   }
 
-  private function reverse_name($name){
+  public function reverse_name($name){
     $name = str_replace('- --', '(', $name);
     $name = str_replace('-- -', ')', $name);
     return $name;

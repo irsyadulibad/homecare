@@ -69,13 +69,19 @@ class Cart extends CI_Controller{
       redirect('cart');
     }
 
-    if(!$this->form_validation->run('checkout')){
-      $data = [
-        'head' => 'Checkout Pesanan',
-        'user' => $user
-      ];
+    $this->form_validation->set_rules('id', 'ID', 'required');
+    if(!$this->form_validation->run()){
+    	$data = [
+	      'head' => 'Checkout Pesanan',
+	      'user' => $user
+			];
 
-      $this->template->load('template2', 'cart/bayar', $data);
+			$this->template->load('template2', 'cart/bayar', $data);
+    }else{
+    	$res = $this->invoice_m->add_invoice($user);
+    	
+    	$this->session->set_flashdata('swal', $res);
+    	redirect('pesanan');
     }
 
   }

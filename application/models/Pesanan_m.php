@@ -1,5 +1,17 @@
 <?php
 class Pesanan_m extends CI_Model{
+  private $table = 'pesanan';
+
+  public function insert($data){
+    $this->db->insert_batch($this->table, $data);
+
+    if($this->db->affected_rows() > 0 ){
+      return ['status' => true];
+    }else{
+      return ['status' => false];
+    }
+
+  }
 
   public function getpes($id = null){
     $this->db->from('pesanan');
@@ -19,7 +31,7 @@ class Pesanan_m extends CI_Model{
     $this->db->where('id_pengguna', $id);
     return $this->db->get()->result_array();
   }
-  public function addpes($post,$lay,$id){
+  public function add($post,$lay,$id){
     $params ['id_layanan'] = $post['id_layanan'];
     $params ['id_pasien'] = $post['id_pasien'];
     $params ['id_pengguna'] = $id;

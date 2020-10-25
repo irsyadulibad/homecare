@@ -11,107 +11,69 @@ class Invoice_m extends CI_model{
     return $this->db->get($this->table)->result_array();
   }
 
-  public function index(){
-    $this->load->model('Obat_m', 'obat');
+  public function add_invoice($user){
+    $bObat = $this->get_biaya_obat();
+    $bLayanan = $this->get_biaya_layanan();
 
+    $data = [
+      'id_pengguna' => $user['id_pengguna'],
+      'status' => 'pending',
+      'biaya_lain' => 0,
+      'biaya_obat' => $bObat,
+      'total' => $bObat + $bLayanan
+    ];
+
+    $this->db->insert($this->table, $data);
+    $id = $this->db->insert_id();
+
+    $this->add_pesanan($id);
+
+    return [
+      'type' => 'success',
+      'msg' => 'Berhasil menambahkan pesanan'
+    ];
+  }
+
+  private function get_biaya_obat(){
+    $this->load->model('obat_m');
+    $obats = $this->session->userdata('obat');
+    $price = 0;
+
+    foreach($obats as $id => $total){
+      $obat = $this->obat_m->getObat($id);
+      $price += intval($obat['harga']) * $total;
+    }
+
+    return $price;
+  }
+
+  private function get_biaya_layanan(){
     $carts = $this->cart->contents();
-    date_default_timezone_set('Asia/Makassar');
-    $nama = $this->input->post('id_pasien');
-    $alamat = $this->input->post('alamat');
-    $provinsi = $this->input->post('provinsi');
-    $kota = $this->input->post('kota');
-    $kecamatan = $this->input->post('kecamatan');
-    $desa = $this->input->post('desa'); 
-    $tgl_kunjungan = $this->input->post('tgl_kunjungan');
-    $jam_kunjungan = $this->input->post('jam_kunjungan');
-    $kondisi = $this->input->post('kondisi');
-    $id = $this->fungsi->user_login()->id_pengguna;
-    $total = 0;
+    $price = 0;
 
-    foreach ($carts as $item) {
-      $total += intval($item['price'] * $item['qty']);
+    foreach($carts as $cart){
+      $price += $cart['subtotal'];
     }
 
-    $invoice = array(
-      'id_pengguna'=> $id,
-      'nama' => $nama,
-      'alamat' => $alamat,
-      'provinsi' => $provinsi,
-      'kota' => $kota,
-      'kecamatan' => $kecamatan,
-      'desa' => $desa,
-      'tgl_kunjungan' => $tgl_kunjungan,
-      'jam_kunjungan' => $jam_kunjungan,
-      'kondisi' => $kondisi,
-      'total' => $total,
-      'tgl_pesan' => date('Y-m-d H:i:s')
-    );
-    $this->db->insert('invoice',$invoice);
-    $id_invoice = $this->db->insert_id();
+    return $price;
+  }
 
-    foreach ($carts as $item){
-      $data = array(
-        'id_invoice' => $id_invoice,
-        'id_layanan' => $item['id'],
-        'nama_layanan' => $item['name'],
-        'jumlah'      => $item['qty'],
-        'harga'     => $item['price']
-      );
+  private function add_pesanan($id_invoice){
+    $this->load->model('pesanan_m');
+    $carts = $this->cart->contents();
+    $data = [];
 
-      $data_obat = [
+    foreach($carts as $cart){
+      $name = $this->cart_m->reverse_name($cart['name']);
+      $data[] = [
         'id_invoice' => $id_invoice,
-        'id_obat' => $item['obat_id'],
-        'qty' => $item['qty']
+        'id_layanan' => $cart['id'],
+        'nama_layanan' => $name,
+        'jumlah' => $cart['qty'],
+        'harga' => $cart['price']
       ];
-
-      $this->db->insert('pesanan',$data);
-      $this->db->insert('pesanan_obat', $data_obat);
-      $this->obat->ambilStok($item['obat_id'], $item['qty']);
-    }
-    return true;
-  }
-  public function tampil_data(){
-    $result = $this->db->get('invoice');
-    if($result->num_rows() > 0){
-      return $result->result();
-    }else{
-      return false;
     }
 
-  }
-  public function ambil_id_invoice($id_invoice){
-    $result = $this->db->where('id_invoice',$id_invoice)->limit(1)->get('invoice');
-    if($result->num_rows() > 0){
-      return $result->row();
-    }else {
-      return false;
-    }
-  }
-  public function ambil_id_pesanan($id_invoice){
-    $result = $this->db->where('id_invoice',$id_invoice)->get('pesanan');
-    if($result->num_rows() > 0){
-      return $result->result();
-    }else {
-      return false;
-    }
-  }
-
-  public function ambil_id_obat($id_invoice){
-    $this->db->select('ps.id_obat, ps.id_invoice, ps.qty, ob.nama, ob.harga');
-    $this->db->from('pesanan_obat as ps');
-    $this->db->where('ps.id_invoice', $id_invoice);
-    $this->db->join('obat as ob', 'ps.id_obat = ob.id_obat');
-    return $this->db->get()->result_array();
-  }
-
-  public function terima($id_invoice, $medis){
-    $biaya_lain = $this->input->post('biaya_lain', true);
-    $this->db->where('id_invoice', $id_invoice);
-    $this->db->update('invoice', [
-      'status' => 'accepted',
-      'biaya_lain' => intval($biaya_lain),
-      'id_medis' => $medis->id_pengguna
-    ]);
-    return $this->db->affected_rows();
+    return $this->pesanan_m->insert($data);
   }
 }
