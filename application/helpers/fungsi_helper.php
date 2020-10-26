@@ -36,3 +36,7 @@ function check_both(){
     redirect('homecare');
   }
 }
+
+function n_format($number){
+  return number_format(intval($number), 0, ',', '.');
+}

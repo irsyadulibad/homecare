@@ -13,6 +13,12 @@ class Pesanan_m extends CI_Model{
 
   }
 
+  public function get_by_invoice($id_invoice){
+    return $this->db->get_where($this->table, [
+      'id_invoice' => $id_invoice
+    ])->result_array();
+  }
+
   public function getpes($id = null){
     $this->db->from('pesanan');
     if($id != null){
