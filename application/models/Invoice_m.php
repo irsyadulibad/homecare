@@ -72,6 +72,46 @@ class Invoice_m extends CI_model{
     ];
   }
 
+  public function accept_invoice($medis, $invoice){
+    $user = $this->user_m->get($invoice['id_pengguna']);
+    $bJalan = $this->alamat_m->get_biaya_jalan($medis['id_alamat'], $user['id_alamat']);
+
+    $data = [
+      'id_medis' => $medis['id_medis'],
+      'id_biayajalan' => $bJalan['id_biayajalan'],
+      'status' => 'accepted'
+    ];
+
+    $this->db->update('invoice', $data, [
+      'id_invoice' => $invoice['id_invoice']
+    ]);
+
+    if($this->db->affected_rows() > 0){
+      return [
+        'type' => 'success',
+        'msg' => 'Berhasil menerima pesanan',
+        'rdr' => 'pesanan/dimedis'
+      ];
+    }else{
+      return [
+        'type' => 'error',
+        'msg' => 'Gagal menerima pesanan',
+        'rdr' => 'homecare'
+      ];
+    }
+
+  }
+
+  public function check_accept_status($user, $pesanans){
+    $layanan = $this->layanan_m->get($pesanans[0]['id_layanan']);
+    
+    if($user['status'] != $layanan['status']){
+      return false;
+    }
+
+    return true;
+  }
+
   private function get_biaya_obat(){
     $this->load->model('obat_m');
     $obats = $this->session->userdata('obat');

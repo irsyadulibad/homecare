@@ -18,6 +18,16 @@ class Alamat_m extends CI_Model{
 
 	}
 
+	public function get_alamat_byid($aid){
+		if(is_null($aid)){
+			return null;
+		}else{
+			return $this->db->get_where('alamat_pengguna', [
+				'id_alamat' => $aid
+			])->row_array();
+		}
+	}
+
 	public function max_id(){
 		$this->db->order_by('id_alamat', 'DESC');
 		$this->db->limit(1);
@@ -41,6 +51,35 @@ class Alamat_m extends CI_Model{
 			];
 		}
 		
+	}
+
+	public function get_biaya_jalan($aid1, $aid2){
+		$alamat1 = $this->get_alamat_byid($aid1);
+		$alamat2 = $this->get_alamat_byid($aid2);
+
+		$lat1 = $alamat1['latitude'];
+		$lat2 = $alamat2['latitude'];
+
+		$lon1 = $alamat1['longtitude'];
+		$lon2 = $alamat2['longtitude'];
+
+		$jarak = $this->get_jarak($lat1, $lat2, $lon1, $lon2);
+
+		$this->db->select('*');
+		$this->db->where("'$jarak' BETWEEN jarak_awal AND jarak_akhir");
+		return $this->db->get('biayajalan')->row_array();
+	}
+
+	public function get_jarak($lat1, $lat2, $lon1, $lon2){
+		return (
+			6371 * acos(
+				cos(deg2rad($lat2))
+				*cos(deg2rad($lat1))
+				*(cos(deg2rad($lon1) - deg2rad($lon2)))
+				+sin(deg2rad($lat2))
+				*sin(deg2rad($lat1))
+			)
+		);
 	}
 
 	public function del_alamat($aid){

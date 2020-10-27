@@ -1,85 +1,66 @@
 <?php
-$pasien = $this->fungsi->get_user($invoice->id_pengguna);
-$address = explode(',', $this->fungsi->get_address($pasien->id_pengguna, 'str'));
-$total = $invoice->total;
+$user = $this->fungsi->get_user($invoice['id_pengguna']);
+$address = $this->fungsi->get_address($user['id_alamat'], 'str');
+$address = explode(',', $address);
+$bJalan = $this->alamat_m->get_biaya_jalan($medis['id_alamat'], $user['id_alamat']);
+$total = $invoice['total'] + $bJalan['biaya'];
 ?>
 <div class="container-fluid">
-    <h4>Terima Pesanan <div class="badge badge-sm badge-success">Nomor: <?php echo $invoice->id_invoice ?></div></h4>
-	<h6 class="text-muted font-weight-bold mt-4">NAMA<span class="ml-3 mr-2">:</span><?= strtoupper($pasien->nama_lengkap); ?></h6>
-    <h6 class="text-muted font-weight-bold">ALAMAT<span class="ml-2 mr-2">:</span><?= $address[0]; ?></h6>
-    <h6 class="text-muted font-weight-bold pl-4"><span class="ml-4 pl-4"><?= trim($address[1]); ?></span></h6>
+  <h4>Terima Pesanan <div class="badge badge-sm badge-success">Nomor: <?php echo $invoice['id_invoice'] ?></div></h4>
+  <h6 class="text-muted font-weight-bold mt-4">NAMA<span class="ml-3 mr-2">:</span><?= strtoupper($user['nama_lengkap']); ?></h6>
+  <h6 class="text-muted font-weight-bold">ALAMAT<span class="ml-2 mr-2">:</span><?= $address[0]; ?></h6>
+  <h6 class="text-muted font-weight-bold pl-4"><span class="ml-4 pl-4"><?= trim($address[1]); ?></span></h6>
 
-	<div class="table-responsive">
+  <div class="table-responsive">
     <table class="table table-border table-hover table-striped">
-
+      <tr>
+        <th>No</th>
+        <th>Nama Layanan</th>
+        <th>Jumlah</th>
+        <th>Harga Satuan</th>
+        <th>Sub-Total</th>
+      </tr>
+      <?php
+        $no = 1;
+        foreach($pesanans as $pesanan):
+        $subtotal = $pesanan['harga'] * $pesanan['jumlah'];
+      ?>
         <tr>
-            <th>No</th>
-            <th>Nama Layanan</th>
-            <th>Jumlah</th>
-            <th>Harga Satuan</th>
-            <th>Sub-Total</th>
-
+          <td><?= $no ?></td>
+          <td><?= $pesanan['nama_layanan'] ?></td>
+          <td><?= $pesanan['jumlah'] ?></td>
+          <td><?= n_format($pesanan['harga']) ?></td>
+          <td><?= n_format($subtotal); ?></td>
         </tr>
-       
-       <?php
-        foreach($pesanan as $psn) {
-                $subtotal = $psn->jumlah * $psn->harga;
-        ?>
-        <tr>
-            <td><?= $psn->id_layanan ?></td>
-            <td><?= $psn->nama_layanan ?></td>
-            <td><?= $psn->jumlah ?></td>
-            <td><?= number_format($psn->harga,0,',','.') ?></td>
-            <td><?= number_format($subtotal,0,',','.') ?></td>
-
-
-        </tr>
-        <?php } ?>
-        <tr>
-            <td colspan="5"></td>
-        </tr>
-        
-        <tr>
-            <th>No.</th>
-            <th>Nama Obat</th>
-            <th>Jumlah</th>
-            <th>Harga Satuan</th>
-            <th>Sub-Total</th>
-        </tr>
-    <?php $n = 0; foreach($obat as $ob): $n++; ?>
-        <tr>
-            <td><?= $n; ?></td>
-            <td><?= $ob['nama']; ?></td>
-            <td><?= $ob['qty']; ?></td>
-            <td><?= number_format($ob['harga'], 0, ',', '.'); ?></td>
-        <?php $subtotal = $ob['harga'] * $ob['qty'];
-            $total += $subtotal; ?>
-            <td><?= number_format($subtotal, 0, ',', '.'); ?></td>
-        </tr>
-    <?php endforeach;?>
-
-       
-        <tr>
-<form action="" method="post">
+      <?php 
+        $no++;
+        endforeach;
+      ?>
+      <tr>
+        <td colspan="5"></td>
+      </tr>
+      <tr>
+        <td colspan="4" align="right">Biaya Obat</td>
+        <td align="right">Rp. <?= n_format($invoice['biaya_obat']) ?></td>
+      </tr>
+      <tr>
         <td colspan="4" align="right">Biaya Lainnya</td>
-            <td align="right">Rp. <input type="number" id="biaya-lain" name="biaya_lain" class="form-control-sm p-2" value="0" autofocus>
-            <small class="text-danger"><?= form_error('biaya_lain'); ?></small>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" align="right">Grand Total</td>
-            <td align="right">Rp. <span id="grand-total-biaya"><?php echo number_format($total,0,',','.') ?></span> </td>
-            
-        </tr>
-
-        <tr>
-            <td align="left">Nama Medis : <span class="bg-white p-1 rounded"><?= $medis->nama_lengkap; ?></span></td>
-        </tr>
-
+        <td align="right">Rp. <?= n_format($invoice['biaya_lain']) ?></td>
+      </tr>
+      <tr>
+        <td colspan="4" align="right">Biaya Jalan</td>
+        <td align="right">Rp. <?= n_format($bJalan['biaya']) ?></td>
+      </tr>
+      <tr>
+        <td colspan="4" align="right">Grand Total</td>
+        <td align="right">Rp. <?= n_format($total) ?></td>
+      </tr>
     </table>
-	</div>
-<div id="grand-total-value" data-value="<?= $total; ?>"></div>
-<button type="submit" class="btn btn-success float-right text-white"><i class="fas fa-check"></i> Terima</button>
+  </div>
+  <div id="grand-total-value" data-value="<?= $total; ?>"></div>
+<?= form_open(); ?>
+  <input type="hidden" value="<?= $invoice['id_invoice']; ?>" name="id">
+  <button type="submit" class="btn btn-success float-right text-white"><i class="fas fa-check"></i> Terima</button>
 </form>
 <a href="<?php echo base_url(); ?>"><div class="btn btn-danger"><i class="fas fa-ban"></i> Batal</div></a>
 </div>

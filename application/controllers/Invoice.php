@@ -5,6 +5,7 @@ class Invoice extends CI_Controller{
     parent::__construct();
     $this->load->model('invoice_m');
     $this->load->model('pesanan_m');
+    $this->load->model('layanan_m');
     $this->load->model('user_m');
     $this->load->model('medis_m');
   }
@@ -28,24 +29,44 @@ class Invoice extends CI_Controller{
   }
   
   public function accept($id_invoice = null){
-    if($this->fungsi->user_login()->role != 2) redirect();
-    if(is_null($id_invoice)) redirect();
-    $data['invoice'] = $this->invoice_m->ambil_id_invoice($id_invoice);
-    if($data['invoice']->status != "pending") redirect();
-    $data['pesanan'] = $this->invoice_m->ambil_id_pesanan($id_invoice);
-    $data['obat'] = $this->invoice_m->ambil_id_obat($id_invoice);
-    $data['medis'] = $this->fungsi->user_login();
-    $this->form_validation->set_rules('biaya_lain', 'Biaya Lain', 'required', ['required' => 'Harus diisi']);
-    if($this->form_validation->run() == FALSE){
+    $this->load->model('alamat_m');
+    
+    if(is_null($id_invoice)) redirect('');
+    $user = $this->fungsi->user_login();
+    $invoice = $this->invoice_m->get($id_invoice);
+    $pesanans = $this->pesanan_m->get_by_invoice($id_invoice);
+
+    // Khusus untuk pengecekan status
+    if(!$this->invoice_m->check_accept_status($user, $pesanans)){
+      redirect('');
+    }
+
+    // Pengecekan alamat
+    if($user['id_alamat'] == null){
+      $this->session->set_flashdata('swal', [
+        'type' => 'error',
+        'msg' => 'Anda harus mengisikan alamat terlebih dahulu'
+      ]);
+
+      redirect('profile/editaddr');
+    }
+
+    $this->form_validation->set_rules('id', 'ID', 'required');
+
+    if(!$this->form_validation->run()){
+      $data = [
+        'invoice' => $invoice,
+        'pesanans' => $pesanans,
+        'medis' => $user,
+        'head' => 'Terima Pesanan'
+      ];
+
       $this->template->load('template2', 'cart/accept', $data);
     }else{
-      $res = $this->invoice_m->terima($id_invoice, $data['medis']);
-      if($res > 0){
-        $this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Berhasil menerima pesanan']);
-      }else{
-        $this->session->set_flashdata('swal', ['type' => 'error', 'msg' => 'Gagal menerima pesanan']);
-      }
-      redirect('pesanan/dimedis');
+      $res = $this->invoice_m->accept_invoice($user, $invoice);
+      $this->session->set_flashdata('swal', $res);
+
+      redirect($res['rdr']);
     }
   }
 
