@@ -70,6 +70,12 @@ class Alamat_m extends CI_Model{
 		return $this->db->get('biayajalan')->row_array();
 	}
 
+	public function get_biaya_byid($id){
+		return $this->db->get_where('biayajalan', [
+			'id_biayajalan' => $id
+		])->row_array();
+	}
+
 	public function get_jarak($lat1, $lat2, $lon1, $lon2){
 		return (
 			6371 * acos(

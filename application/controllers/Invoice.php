@@ -17,6 +17,7 @@ class Invoice extends CI_Controller{
   }
 
   public function detail($id_invoice){
+    $this->load->model('alamat_m');
     if(is_null($id_invoice)) redirect();
 
     $data = [

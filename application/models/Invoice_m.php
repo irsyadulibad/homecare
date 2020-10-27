@@ -23,15 +23,35 @@ class Invoice_m extends CI_model{
     ])->result_array();
   }
 
-  public function get_pending(){
-    return $this->db->get($this->table)->result_array();
+  public function get_by_medis($id){
+    return $this->db->get_where($this->table, [
+      'id_medis' => $id
+    ])->result_array();
   }
 
-  public function cancel($id){
-    $this->restock_obat($id);
-    $this->db->delete($this->table, [
-      'id_invoice' => $id
-    ]);
+  public function get_pending(){
+    return $this->db->get_where($this->table, [
+      'status' => 'pending'
+    ])->result_array();
+  }
+
+  public function cancel($user, $id){
+    if($user['status'] == 'user'){
+      $this->restock_obat($id);
+      $this->db->delete($this->table, [
+        'id_invoice' => $id
+      ]);
+    }else{
+      $data = [
+        'id_medis' => null,
+        'id_biayajalan' => null,
+        'status' => 'pending'
+      ];
+
+      $this->db->update($this->table, $data, [
+        'id_invoice' => $id
+      ]);
+    }
 
     if($this->db->affected_rows() > 0){
       return [

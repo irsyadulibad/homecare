@@ -10,6 +10,14 @@ if(!is_null($invoice['id_medis'])){
   $medis = ['nama_lengkap' => null];
 }
 
+if(!is_null($invoice['id_biayajalan'])){
+  $bJalan = $this->alamat_m->get_biaya_byid($invoice['id_biayajalan']);
+}else{
+  $bJalan = ['biaya' => 0];
+}
+
+$total = $invoice['total'] + $bJalan['biaya'];
+
 switch ($invoice['status']) {
   case 'pending':
     $status = 'warning';
@@ -65,11 +73,11 @@ switch ($invoice['status']) {
       </tr>
       <tr>
         <td colspan="4" align="right">Biaya Jalan</td>
-        <td align="right">Rp. <?= 0 ?></td>
+        <td align="right">Rp. <?= $bJalan['biaya']; ?></td>
       </tr>
       <tr>
         <td colspan="4" align="right">Grand Total</td>
-        <td align="right">Rp. <?= n_format($invoice['total']) ?></td>
+        <td align="right">Rp. <?= n_format($total) ?></td>
       </tr>
       <tr>
         <td align="left">Nama Medis : <span class="bg-white p-1 rounded"><?= $medis['nama_lengkap']; ?></span></td>
