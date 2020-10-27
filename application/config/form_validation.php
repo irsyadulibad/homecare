@@ -300,5 +300,23 @@ $config = [
 			'label' => 'Alamat',
 			'rules' => 'required'
 		]
+	],
+
+	'tambah_pesanan_lain' => [
+		[
+			'field' => 'name',
+			'label' => 'Nama Layanan',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'price',
+			'label' => 'Harga',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'qty',
+			'label' => 'Jumlah',
+			'rules' => 'required|is_numeric'
+		]
 	]
 ];

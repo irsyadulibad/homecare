@@ -33,7 +33,7 @@ class Homecare extends CI_Controller {
 			$data = [
 				'pending_invoice' => $this->invoice_m->get_pending(),
 				'rateaverage' => $this->ulasan_m->get_average_by_medic($id),
-				'pesanan' => count($this->pesanan_m->getpesmed($id))
+				'pesanan' => count($this->invoice_m->get_by_medis($id))
 			];
 
 			$this->template->load('template2', 'dashboard/dasmedis', $data);

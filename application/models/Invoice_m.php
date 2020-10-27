@@ -132,6 +132,29 @@ class Invoice_m extends CI_model{
     return true;
   }
 
+  // Khusus untuk manage pesanan lainnya
+  public function add_biaya_lain($invoice, $biaya){
+    $this->db->update($this->table, [
+      'biaya_lain' => $invoice['biaya_lain'] + $biaya,
+      'total' => $invoice['total'] + $biaya
+    ], [
+      'id_invoice' => $invoice['id_invoice']
+    ]);
+
+    return $this->db->affected_rows();
+  }
+
+  public function del_biaya_lain($invoice, $biaya){
+    $this->db->update($this->table, [
+      'biaya_lain' => $invoice['biaya_lain'] - $biaya,
+      'total' => $invoice['total'] - $biaya
+    ], [
+      'id_invoice' => $invoice['id_invoice']
+    ]);
+
+    return $this->db->affected_rows();
+  }
+
   private function get_biaya_obat(){
     $this->load->model('obat_m');
     $obats = $this->session->userdata('obat');

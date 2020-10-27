@@ -84,6 +84,43 @@ class Pesanan extends CI_Controller{
 
   }
 
+  public function tambah($id = null){
+    $user = $this->fungsi->user_login();
+    if(is_null($id)) redirect('pesanan/dimedis');
+
+    $invoice = $this->invoice_m->get($id);
+    if(is_null($invoice) || $invoice['id_medis'] != $user['id_medis']){
+      redirect('');
+    }
+
+    if(!$this->form_validation->run('tambah_pesanan_lain')){
+      $data = [
+        'head' => 'Pesanan Lainnya',
+        'pesanans' => $this->pesanan_m->get_lainnya($id),
+        'invoice' => $invoice
+      ];
+
+      $this->template->load('template2', 'pesanan/tambahlain', $data);
+    }else{
+      $res = $this->pesanan_m->add_lainnya($invoice);
+      $this->session->set_flashdata('swal', $res);
+
+      redirect("pesanan/tambah/$id");
+    }
+  }
+
+  public function del_lainnya($id = null){
+    if(is_null($id)) redirect('pesanan');
+    $pLainnya = $this->pesanan_m->get_lainnya_byid($id);
+    if(is_null($pLainnya)) redirect('pesanan');
+
+    $prev = $this->input->get('prev', true);
+    $res = $this->pesanan_m->del_lainnya($pLainnya);
+    $this->session->set_flashdata('swal', $res);
+
+    redirect("pesanan/tambah/$prev");
+  }
+
   public function batal($id = null){
     $user = $this->fungsi->user_login();
     if(is_null($id)) redirect('pesanan');
