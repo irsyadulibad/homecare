@@ -7,6 +7,7 @@ class Ulasan extends CI_Controller {
 		check_not_login();
 		$this->load->model('ulasan_m');
 		$this->load->model('pesanan_m');
+		$this->load->model('riwayat_m');
 	}
 
 	public function index($start=0){
@@ -39,29 +40,25 @@ class Ulasan extends CI_Controller {
 
 	public function tambah($id = null){
 		$user = $this->fungsi->user_login();
-		$data['riwayat'] = $this->db->get_where('riwayat', ['id_riwayat' => $id])->row_array();
-		if(is_null($data['riwayat']) || $data['riwayat']['id_pengguna'] != $user->id_pengguna) redirect('riwayat');
-		if(!is_null($data['riwayat']['review'])) redirect('ulasan');
+		if(is_null($id) || $user['status'] != 'user') redirect('riwayat');
+		$riwayat = $this->riwayat_m->get($id);
+		if(is_null($riwayat)) redirect('riwayat');
+		if($riwayat['id_pengguna'] != $user['id_pengguna']) redirect('');
 
-		$this->form_validation->set_rules('rating', 'Rating', 'required');
-		$this->form_validation->set_rules('description', 'Deskripsi','required');
+		if(!$this->form_validation->run('manage_ulasan')){
+			$data = [
+				'head' => 'Tambah Ulasan'
+			];
 
-		$this->form_validation->set_message('required', '%s Masih Kosong, Silahkan Diisi');
-
-		if ($this->form_validation->run() == FALSE) {
-			$this->template->load('template2','ulasan/tambahulasan', $data);
+			$this->template->load('template2', 'ulasan/tambahulasan', $data);
 		}else{
-			$res = $this->ulasan->tambah_ulasan($data['riwayat']);
-			if($res>0){
-				$this->session->set_flashdata('swal', ['type' => 'success', 'msg' => 'Berhasil menambahkan ulasan']);
-				redirect('ulasan');
-			}else{
-				$this->session->set_flashdata('swal', ['type' => 'danger', 'msg' => 'Gagal menambahkan']);
-				redirect('riwayat');
-			}
-		}
+			$res = $this->ulasan_m->tambah_ulasan($riwayat);
+			$this->session->set_flashdata('swal', $res);
 
+			redirect('riwayat');
+		}
 	}
+
 	public function detail($id = null){
 		if(is_null($id)) redirect('ulasan');
 		$ulasan = $this->ulasan_m->get_ulasan_byid($id);

@@ -79,30 +79,42 @@ class Ulasan_m extends CI_Model {
 
   public function reviewed($id){
     $rev = $this->db->get_where($this->table, [
-      'id_ulasan' => $id
+      'id_invoice' => $id
     ])->row_array();
 
-    return is_null($rev) ? false : true;
+    if(is_null($rev)){
+      return [
+        'status' => false
+      ];
+    }else{
+      return [
+        'status' => true,
+        'id' => $rev['id_ulasan']
+      ];
+    }
   }
 
   public function tambah_ulasan($riwayat){
-    $rating = $this->input->post('rating', true);
-    $descript = $this->input->post('description', true);
-    $user = $this->fungsi->get_user($riwayat['id_pengguna']);
-
     $data = [
-      'id_pengguna' => $riwayat['id_pengguna'],
-      'id_medis' => $riwayat['id_medis'],
-      'time' => date('Y-m-d H:i:s'),
-      'rating' => $rating,
-      'deskripsi' => $descript,
-      'nama' => $user->nama_lengkap
+      'id_invoice' => $riwayat['id_invoice'],
+      'waktu' => date('Y-m-d H:i:s'),
+      'rating' => $this->input->post('rating', true),
+      'deskripsi' => $this->input->post('description', true)
     ];
 
-    $this->db->insert('ulasan', $data);
-    $id_ulasan = $this->db->insert_id();
-    $this->db->update('riwayat', ['review' => $id_ulasan], ['id_riwayat' => $riwayat['id_riwayat']]);
-    return $this->db->affected_rows();
+    $this->db->insert($this->table, $data);
+
+    if($this->db->affected_rows() > 0){
+      return [
+        'type' => 'success',
+        'msg' => 'Berhasil menambahkan ulasan'
+      ];
+    }else{
+      return [
+        'type' => 'error',
+        'msg' => 'Gagal menambahkan ulasan'
+      ];
+    }
   }
 
   public function edit($id){

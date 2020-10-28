@@ -24,7 +24,7 @@
 							</tr>
 						<?php
 							else:
-							$i = 0;
+							$i = 1;
 							foreach($histories as $history):
 								$pas = $this->user_m->get($history['id_pengguna']);
 								$reviewed = $this->ulasan_m->reviewed($history['id_invoice']);
@@ -37,12 +37,12 @@
 								<td><?= $history['tgl_pesan']; ?></td>
 								<td>
 									<a href="<?= base_url('riwayat/detail/'.$history['id_riwayat']); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>
-								<?php if(!$reviewed): ?>
+								<?php if(!$reviewed['status']): ?>
 									<?php if($user['status'] == 'user'): ?>
 									<a href="<?= base_url('ulasan/tambah/'.$history['id_riwayat']); ?>?prev=" class="btn btn-sm btn-success"><i class="fas fa-star"></i> Ulas</a>
 									<?php endif; ?>
 								<?php else: ?>
-									<a href="<?= base_url('ulasan/detail/'.$history['review']); ?>" class="btn btn-sm btn-success"><i class="fas fa-star"></i> Ulasan</a>
+									<a href="<?= base_url('ulasan/detail/'.$reviewed['id']); ?>" class="btn btn-sm btn-success"><i class="fas fa-star"></i> Ulasan</a>
 								<?php endif; ?>
 								</td>
 							</tr>
