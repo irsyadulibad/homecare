@@ -44,5 +44,5 @@
       </div>
     </div>
     <div class="mt-5 text-muted text-center">
-      Tidak mempunyai akun? <a href="<?= base_url('auth/register'); ?>">Daftar</a>
+      Tidak mempunyai akun? <a href="<?= base_url('register'); ?>">Daftar</a>
     </div>

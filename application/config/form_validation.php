@@ -331,5 +331,33 @@ $config = [
 			'label' => 'Deskripsi',
 			'rules' => 'required'
 		]
+	],
+
+	'user_register' => [
+		[
+			'field' => 'fullname',
+			'label' => 'Nama Lengkap',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'email',
+			'label' => 'Email',
+			'rules' => 'required|valid_email|is_unique[pengguna.email]|is_unique[medis.email]'
+		],
+		[
+			'field' => 'gender',
+			'label' => 'Jenis Kelamin',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'password',
+			'label' => 'Password',
+			'rules' => 'required|min_length[4]'
+		],
+		[
+			'field' => 'password2',
+			'label' => 'Konfirmasi Password',
+			'rules' => 'required|matches[password]'
+		]
 	]
 ];

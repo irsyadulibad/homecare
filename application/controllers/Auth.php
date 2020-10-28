@@ -15,13 +15,7 @@ class Auth extends CI_Controller {
 		$this->load->view('login/home');
 		$this->load->view('login/template/foot');
 	}
-	public function register()
-	{
-		check_already_login();
-		$this->load->view('login/template/head');
-		$this->load->view('login/register');
-		$this->load->view('login/template/foot');
-	}
+	
 	public function process(){
 		$email = htmlspecialchars($this->input->post('email', true));
 		$pass = htmlspecialchars($this->input->post('password', true));
