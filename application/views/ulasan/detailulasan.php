@@ -1,3 +1,11 @@
+<?php
+if(isset($pengguna['id_medis'])){
+	$idUser = $pengguna['id_medis'];
+}else{
+	$idUser = $pengguna['id_pengguna'];
+}
+
+?>
 <div class="container-fluid">
 	<div class="row justify-content-center">
 		<div class="col-md-10">
@@ -29,7 +37,7 @@
 							</ol>
 						</div>
 						<div class="col-md-2" style="min-height: 70px;">
-						<?php if($ulasan['id_pengguna'] == $pengguna->id_pengguna): ?>
+						<?php if($ulasan['id_pengguna'] == $idUser && $pengguna['status'] == 'user'): ?>
 							<a href="<?= base_url('ulasan/edit/'.$ulasan['id_ulasan']); ?>" class="btn btn-success text-white confirm-href" style="position: absolute; bottom: 5px; right: 5px;"><i class="fas fa-edit"></i> Edit</a>
 						<?php endif; ?>
 						</div>

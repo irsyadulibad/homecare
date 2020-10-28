@@ -318,5 +318,18 @@ $config = [
 			'label' => 'Jumlah',
 			'rules' => 'required|is_numeric'
 		]
+	],
+
+	'manage_ulasan' => [
+		[
+			'field' => 'rating',
+			'label' => 'Rating',
+			'rules' => 'required|is_numeric'
+		],
+		[
+			'field' => 'description',
+			'label' => 'Deskripsi',
+			'rules' => 'required'
+		]
 	]
 ];
