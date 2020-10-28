@@ -99,6 +99,16 @@ class Invoice_m extends CI_model{
     }
   }
 
+  public function set_finished($id){
+    $this->db->update($this->table, [
+      'status' => 'finished'
+    ],[
+      'id_invoice' => $id
+    ]);
+
+    return $this->db->affected_rows();
+  }
+
   public function cancel_paying($id){
     $this->db->update($this->table, [
       'status' => 'accepted'

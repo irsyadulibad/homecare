@@ -65,6 +65,29 @@ $total = $invoice['total'] + $bJalan['biaya'];
 		<h1 class="text-center mb-3" style="color: #7571f9;"><sup style="font-size: 20px;">Rp</sup> <?= number_format($total,0,',','.'); ?></h1>
 	</div>
 	<?php if($user['status'] == 'medis' || $user['status'] == 'paramedis'): ?>
-	<a class="btn btn-success btn-sm text-white float-right mt-3 confirm-href" href="<?= base_url('/pembayaran/bayar/'.$invoice['id_invoice']); ?>">Konfirmasi</a>
-	<?php endif; ?>
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <form action="<?= base_url('pembayaran/bayar/'.$invoice['id_invoice']) ?>">
+      <div class="form-group">
+        <label for="kondisi">Kondisi</label>
+        <input type="text" class="form-control" name="kondisi" id="kondisi">
+        <small class="text-danger"><?= form_error('kondisi') ?></small>
+      </div>
+      <div class="form-group">
+        <label for="riwayat-penyakit">Riwayat Penyakit</label>
+        <textarea name="riwayat_penyakit" id="riwayat-penyakit"class="form-control"></textarea>
+        <small class="text-danger"><?= form_error('riwayat_penyakit') ?></small>
+      </div>
+      <div class="form-group">
+        <label for="alergi">Alergi</label>
+        <input type="text" class="form-control" name="alergi" id="alergi">
+        <small class="text-danger"><?= form_error('alergi') ?></small>
+      </div>
+      <div class="form-group text-center">
+        <button class="btn btn-success" type="submit">Konfirmasi</button>
+      </div>
+      </form>
+    </div>
+  </div>
+<?php endif; ?>
 </div>

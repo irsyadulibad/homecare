@@ -25,34 +25,30 @@ class Pembayaran extends CI_Controller {
 
 	public function konfirmasi($id = null){
 		$this->load->model('medis_m');
+		$this->load->model('riwayat_m');
 		$user = $this->fungsi->user_login();
 
 		if(is_null($id)) redirect('pembayaran');
 		$invoice = $this->invoice_m->get($id);
 		if(is_null($invoice)) redirect('pembayaran');
 
-		$data = [
-			'invoice' => $invoice,
-			'pesanans' => $this->pesanan_m->get_by_invoice($id),
-			'user' => $user,
-			'head' => 'Konfimasi Pembayaran'
-		];
+		if(!$this->form_validation->run('konfir_pembayaran')){
+			$data = [
+				'invoice' => $invoice,
+				'pesanans' => $this->pesanan_m->get_by_invoice($id),
+				'user' => $user,
+				'head' => 'Konfimasi Pembayaran'
+			];
 
-		$this->template->load('template2', 'pembayaran/konfirmasi', $data);
-	}
+			$this->template->load('template2', 'pembayaran/konfirmasi', $data);
+		}else{
+			$res = $this->riwayat_m->set_riwayat($invoice);
+			$this->session->set_flashdata('swal', $res);
 
-	public function bayar($id = null){
-		$this->load->model('riwayat_m');
-		$user = $this->fungsi->user_login();
-		$invoice = $this->invoice_m->get($id);
-
-		if(is_null($id) || is_null($invoice)) redirect('pembayaran');
-		
-		if($user['status'] != 'medis' && $user['status'] != 'paramedis'){
-			redirect('');
+			$red = ($res['type'] == 'success') ? 'riwayat' : 'pembayaran';
+			redirect($red);
 		}
-
-		$this->riwayat_m->set_riwayat($invoice);
+		
 	}
 
 	public function batalkan($id = null){

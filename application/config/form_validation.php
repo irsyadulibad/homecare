@@ -320,6 +320,24 @@ $config = [
 		]
 	],
 
+	'konfir_pembayaran' => [
+		[
+			'field' => 'kondisi',
+			'label' => 'Kondisi',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'riwayat_penyakit',
+			'label' => 'Riwayat Penyakit',
+			'rules' => 'required'
+		],
+		[
+			'field' => 'alergi',
+			'label' => 'Alergi',
+			'rules' => 'required'
+		]
+	],
+
 	'manage_ulasan' => [
 		[
 			'field' => 'rating',
