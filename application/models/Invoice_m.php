@@ -36,6 +36,13 @@ class Invoice_m extends CI_model{
     ])->result_array();
   }
 
+  public function get_paying($id){
+    return $this->db->get_where($this->table, [
+      'status' => 'paying',
+      'id_medis' => $id
+    ])->result_array();
+  }
+
   public function cancel($user, $id){
     if($user['status'] == 'user'){
       $this->restock_obat($id);
@@ -49,6 +56,7 @@ class Invoice_m extends CI_model{
         'status' => 'pending'
       ];
 
+      $this->pesanan_m->del_lainnya_by_invoice($id);
       $this->db->update($this->table, $data, [
         'id_invoice' => $id
       ]);
@@ -84,6 +92,26 @@ class Invoice_m extends CI_model{
       return [
         'type' => 'error',
         'msg' => 'Gagal menyelesaikan pesanan'
+      ];
+    }
+  }
+
+  public function cancel_paying($id){
+    $this->db->update($this->table, [
+      'status' => 'accepted'
+    ], [
+      'id_invoice' => $id
+    ]);
+
+    if($this->db->affected_rows() > 0){
+      return [
+        'type' => 'success',
+        'msg' => 'Berhasil membatalkan pembayaran'
+      ];
+    }else{
+      return [
+        'type' => 'error',
+        'msg' => 'Gagal membatalkan pembayaran'
       ];
     }
   }

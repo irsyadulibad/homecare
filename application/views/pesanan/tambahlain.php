@@ -32,7 +32,7 @@
 								<td><?= n_format($pesanan['harga_satuan']) ?></td>
 								<td><?= $pesanan['jumlah'] ?></td>
 								<td>
-									<a href="<?= base_url('pesanan/del_lainnya/'.$pesanan['id'].'?prev='.$invoice['id_invoice']) ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+									<a href="<?= base_url('pesanan/del_lainnya/'.$pesanan['id'].'?prev='.$invoice['id_invoice']) ?>" class="btn btn-sm btn-danger confirm-href"><i class="fas fa-trash-alt"></i></a>
 								</td>
 							</tr>
 						<?php

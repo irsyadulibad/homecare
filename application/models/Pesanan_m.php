@@ -73,6 +73,16 @@ class Pesanan_m extends CI_Model{
 
   }
 
+  public function del_lainnya_by_invoice($id){
+    $pesanans = $this->get_lainnya($id);
+
+    foreach($pesanans as $pesanan){
+      $this->del_lainnya($pesanan);
+    }
+
+    return true;
+  }
+
   public function get_lainnya($id){
     return $this->db->get_where('pesanan_lainnya', [
       'id_invoice' => $id
