@@ -5,36 +5,47 @@ class Riwayat extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		check_not_login();
-		$this->load->model('Model_invoice', 'model_invoice');
+		$this->load->model('invoice_m');
+		$this->load->model('riwayat_m');
+		$this->load->model('user_m');
+		$this->load->model('medis_m');
+		$this->load->model('alamat_m');
 	}
 
 	public function index(){
+		$this->load->model('ulasan_m');
 		$user = $this->fungsi->user_login();
-		if($user->role == 2){
-			$data['histories'] = $this->db->get_where('riwayat', ['id_medis' => $user->id_pengguna])->result_array();
-		}elseif($user->role == 1){
-			$data['histories'] = $this->db->get_where('riwayat')->result_array();
+
+		if($user['status'] == 'admin'){
+			$riwayat = $this->riwayat_m->get();
+		}else if($user['status'] == 'user'){
+			$riwayat = $this->riwayat_m->get_by_user($user['id_pengguna']);
 		}else{
-			$data['histories'] = $this->db->get_where('riwayat', ['id_pengguna' => $user->id_pengguna])->result_array();
+			$riwayat = $this->riwayat_m->get_by_medis($user['id_medis']);
 		}
-		$data['user'] = $user;
+
+		$data = [
+			'histories' => $riwayat,
+			'user' => $user
+		];
+
 		$this->template->load('template2', 'riwayat/index', $data);
 	}
-	function detail($id_riwayat){
+
+	function detail($id_riwayat = null){
+		$this->load->model('pesanan_m');
+
+		if(is_null($id_riwayat)) redirect('riwayat');
 		$user = $this->fungsi->user_login();
-		if(is_null($id_riwayat)) rediect('riwayat');
-		if($user->role == 2){
-			$data['riwayat'] = $this->db->get_where('riwayat', ['id_riwayat' => $id_riwayat])->row_array();
-			$data['medis'] = $this->db->get_where('pengguna', ['id_pengguna' => $data['riwayat']['id_medis']])->row_array();
-			if($user->id_pengguna != $data['riwayat']['id_medis']) redirect('riwayat');
-		}else{
-			$data['riwayat'] = $this->db->get_where('riwayat', ['id_riwayat' => $id_riwayat])->row_array();
-			$data['medis'] = $this->db->get_where('pengguna', ['id_pengguna' => $data['riwayat']['id_medis']])->row_array();
-			if($user->id_pengguna != $data['riwayat']['id_pengguna']) redirect('riwayat');
-		}
-		$data['layanan'] = $this->model_invoice->ambil_id_pesanan($data['riwayat']['id_invoice']);
-		$data['obat'] = $this->model_invoice->ambil_id_obat($data['riwayat']['id_invoice']);
-		$data['user'] = $user;
+		$riwayat = $this->riwayat_m->get($id_riwayat);
+		if(is_null($riwayat)) redirect('riwayat');
+
+		$data = [
+			'head' => 'Detail Riwayat',
+			'invoice' => $this->invoice_m->get($riwayat['id_invoice']),
+			'pesanans' => $this->pesanan_m->get_by_invoice($riwayat['id_invoice'])
+		];
+
 		$this->template->load('template2', 'riwayat/detail', $data);
 	}
 }

@@ -77,6 +77,14 @@ class Ulasan_m extends CI_Model {
     return $this->db->get()->num_rows();
   }
 
+  public function reviewed($id){
+    $rev = $this->db->get_where($this->table, [
+      'id_ulasan' => $id
+    ])->row_array();
+
+    return is_null($rev) ? false : true;
+  }
+
   public function tambah_ulasan($riwayat){
     $rating = $this->input->post('rating', true);
     $descript = $this->input->post('description', true);
