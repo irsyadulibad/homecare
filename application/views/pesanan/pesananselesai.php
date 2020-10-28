@@ -12,9 +12,10 @@ $total = $invoice['total'] + $bJalan['biaya'];
     <h6 class="text-muted font-weight-bold">ALAMAT<span class="ml-2 mr-2">:</span><?= $address[0]; ?></h6>
     <h6 class="text-muted font-weight-bold pl-4"><span class="ml-4 pl-4"><?= trim($address[1]); ?></span></h6>
     <h6 class="text-muted font-weight-bold">MEDIS<span class="ml-2 mr-2">:</span><?= strtoupper($medis['nama_lengkap']); ?></h6>
-    <form action="" method="post">
+  <form action="" method="post">
+  <input type="hidden" value="<?= $invoice['id_invoice'] ?>" name="id">
 	<div class="table-responsive">
-	<table class="table table-border table-hover table-striped">
+    <table class="table table-border table-hover table-striped">
       <tr>
         <th>No</th>
         <th>Nama Layanan</th>

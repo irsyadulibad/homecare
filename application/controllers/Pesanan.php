@@ -42,7 +42,7 @@ class Pesanan extends CI_Controller{
     }
 
     $data = [
-      'invoices' => $this->invoice_m->get_by_userid($user['id_pengguna']),
+      'invoices' => $this->invoice_m->get_by_user($user['id_pengguna']),
       'user' => $user
     ];
 
@@ -80,6 +80,11 @@ class Pesanan extends CI_Controller{
       ];
 
       $this->template->load('template2', 'pesanan/pesananselesai', $data);
+    }else{
+      $res = $this->invoice_m->selesai($id);
+      $this->session->set_flashdata('swal', $res);
+
+      redirect('pembayaran');
     }
 
   }

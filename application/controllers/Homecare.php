@@ -41,7 +41,7 @@ class Homecare extends CI_Controller {
 			
 			$id = $user['id_pengguna'];
 			$data = [
-				'pesanan' => count($this->pesanan_m->getpesuser($id))
+				'pesanan' => count($this->invoice_m->get_by_user($id))
 			];
 
 			$this->template->load('template2', 'dashboard/home', $data);

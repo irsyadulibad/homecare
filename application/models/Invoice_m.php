@@ -17,7 +17,7 @@ class Invoice_m extends CI_model{
     }
   }
 
-  public function get_by_userid($id){
+  public function get_by_user($id){
     return $this->db->get_where($this->table, [
       'id_pengguna' => $id
     ])->result_array();
@@ -25,7 +25,8 @@ class Invoice_m extends CI_model{
 
   public function get_by_medis($id){
     return $this->db->get_where($this->table, [
-      'id_medis' => $id
+      'id_medis' => $id,
+      'status' => 'accepted'
     ])->result_array();
   }
 
@@ -65,6 +66,26 @@ class Invoice_m extends CI_model{
       ];
     }
 
+  }
+
+  public function selesai($id){
+    $this->db->update($this->table, [
+      'status' => 'paying'
+    ], [
+      'id_invoice' => $id
+    ]);
+
+    if($this->db->affected_rows() > 0){
+      return [
+        'type' => 'success',
+        'msg' => 'Berhasil menyelesaikan pesanan'
+      ];
+    }else{
+      return [
+        'type' => 'error',
+        'msg' => 'Gagal menyelesaikan pesanan'
+      ];
+    }
   }
 
   public function add_invoice($user){
