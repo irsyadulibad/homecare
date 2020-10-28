@@ -15,6 +15,7 @@ class Register_m extends CI_Model {
       'nama_lengkap' => $this->input->post('fullname', true),
       'email' => $this->input->post('email', true),
       'jenis_kelamin' => $this->input->post('gender', true),
+      'status' => 'user',
       'password' => sha1($this->input->post('password', true)),
       'foto' => 'default.jpg',
       'code' => $this->generate_code(),
