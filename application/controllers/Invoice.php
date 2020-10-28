@@ -11,8 +11,13 @@ class Invoice extends CI_Controller{
   }
 
   public function index(){
-    if($this->fungsi->user_login()->role != 1) redirect('pesanan');
-    $data['invoice'] = $this->invoice_m->tampil_Data();
+    $user = $this->fungsi->user_login();
+    if($user['status'] != 'admin') redirect('pesanan');
+
+    $data = [
+      'invoices' => $this->invoice_m->get()
+    ];
+
     $this->template->load('template2','cart/invoice',$data);
   }
 

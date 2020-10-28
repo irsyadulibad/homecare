@@ -12,30 +12,28 @@
 								<th>#</th>
 								<th>Nama</th>
 								<th>Alamat</th>
-								<th>Tgl Pesanan</th>
-								<th>Jam Kunjungan</th>
-								<th>Tgl Kunjungan</th>
 								<th>Aksi</th>
 							</tr>
 						</thead>
 						<tbody>
-						<?php if(empty($invoice)): ?>
+						<?php if(empty($invoices)): ?>
 							<tr>
-								<td colspan="6" align="center">Data masih kosong</td>
+								<td colspan="4" align="center">Data masih kosong</td>
 							</tr>
-						<?php else: $i = 0; ?>
-							<?php foreach($invoice as $inv): $i++;?>
-							<?php $user = $this->fungsi->get_user($inv->id_pengguna); ?>
+						<?php
+							else:
+							$i = 1;
+							foreach($invoices as $inv):
+							$user = $this->user_m->get($inv['id_pengguna']);
+							$address = $this->fungsi->get_address($user['id_alamat']);
+						?>
 							<tr>
 								<td><?= $i; ?></td>
-								<td><?= $user->nama_lengkap ?></td>
-								<td><?= $user->alamat->alamat ?></td>
-								<td><?= $inv->tgl_pesan ?></td>
-								<td><?= $inv->jam_kunjungan ?></td>
-								<td><?= $inv->tgl_kunjungan ?></td>
+								<td><?= $user['nama_lengkap'] ?></td>
+								<td><?= $address['alamat'] ?></td>
 								<td>
-									<a href="<?= base_url('invoice/detail/'.$inv->id_invoice); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>
-									<a href="<?= base_url('pesanan/batal/'.$inv->id_invoice); ?>?prev=" class="btn btn-sm btn-danger confirm-href"><i class="fas fa-ban"></i> Batalkan</a>
+									<a href="<?= base_url('invoice/detail/'.$inv['id_invoice']); ?>?prev=" class="btn btn-sm btn-primary"><i class="fas fa-exclamation-circle"></i> Detail</a>
+									<a href="<?= base_url('pesanan/batal/'.$inv['id_invoice']); ?>?prev=" class="btn btn-sm btn-danger confirm-href"><i class="fas fa-ban"></i> Batalkan</a>
 								</td>
 							</tr>
 							<?php endforeach; ?>

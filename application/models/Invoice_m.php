@@ -13,13 +13,16 @@ class Invoice_m extends CI_model{
         'id_invoice' => $id
       ])->row_array();
     }else{
-      return $this->db->get($this->table)->result_array();
+      return $this->db->get_where($this->table, [
+        'status !=' => 'finished'
+      ])->result_array();
     }
   }
 
   public function get_by_user($id){
     return $this->db->get_where($this->table, [
-      'id_pengguna' => $id
+      'id_pengguna' => $id,
+      'status !=' => 'finished'
     ])->result_array();
   }
 
@@ -44,7 +47,7 @@ class Invoice_m extends CI_model{
   }
 
   public function cancel($user, $id){
-    if($user['status'] == 'user'){
+    if($user['status'] == 'user' || $user['status'] == 'admin'){
       $this->restock_obat($id);
       $this->db->delete($this->table, [
         'id_invoice' => $id

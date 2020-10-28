@@ -8,6 +8,7 @@ class Cart extends CI_Controller{
     $this->load->model('layanan_m');
     $this->load->model('invoice_m');
     check_not_login();
+    $this->check_user();
   }
 
   function index(){
@@ -84,5 +85,10 @@ class Cart extends CI_Controller{
     	redirect('pesanan');
     }
 
+  }
+
+  private function check_user(){
+    $user = $this->fungsi->user_login();
+    if($user['status'] != 'user') redirect('');
   }
 }
