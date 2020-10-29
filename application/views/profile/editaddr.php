@@ -22,9 +22,11 @@ if(!is_null($alamat)){
             <?= $user['nama_lengkap']; ?> -- 
             <span class="badge badge-sm badge-primary"><?= $user['status']; ?></span>
           </div>
+        <?php if(!is_null($alamat)): ?>
           <span class="profile-widget-bio">
             <?= $alamat['alamat'] ?>
           </span>
+        <?php endif; ?>
         </div>
       </div>
     </div>
