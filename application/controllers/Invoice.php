@@ -44,6 +44,10 @@ class Invoice extends CI_Controller{
 
     // Khusus untuk pengecekan status
     if(!$this->invoice_m->check_accept_status($user, $pesanans)){
+      $this->session->set_flashdata('swal', [
+        'type' => 'error',
+        'msg' => 'Maaf, anda tidak dapat menerima pesanan ini'
+      ]);
       redirect('');
     }
 
