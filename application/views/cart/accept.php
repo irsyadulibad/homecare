@@ -1,8 +1,6 @@
 <?php
-$user = $this->fungsi->get_user($invoice['id_pengguna']);
 $address = $this->fungsi->get_address($user['id_alamat'], 'str');
 $address = explode(',', $address);
-$bJalan = $this->alamat_m->get_biaya_jalan($medis['id_alamat'], $user['id_alamat']);
 $bJalan = is_null($bJalan) ? 0 : $bJalan['biaya'];
 $total = $invoice['total'] + $bJalan;
 ?>

@@ -61,6 +61,18 @@ class Invoice extends CI_Controller{
       redirect('profile/editaddr');
     }
 
+    $pasien = $this->fungsi->get_user($invoice['id_pengguna']);
+    $bJalan = $this->alamat_m->get_biaya_jalan($user['id_alamat'], $pasien['id_alamat']);
+
+    if(is_null($bJalan)){
+      $this->session->set_flashdata('swal', [
+        'type' => 'error',
+        'msg' => 'Maaf, jarak anda dengan pasien belum tercover'
+      ]);
+
+      redirect('');
+    }
+
     $this->form_validation->set_rules('id', 'ID', 'required');
 
     if(!$this->form_validation->run()){
@@ -68,6 +80,7 @@ class Invoice extends CI_Controller{
         'invoice' => $invoice,
         'pesanans' => $pesanans,
         'medis' => $user,
+        'user' => $pasien,
         'head' => 'Terima Pesanan'
       ];
 
