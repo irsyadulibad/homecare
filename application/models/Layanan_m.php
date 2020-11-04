@@ -13,6 +13,12 @@ class Layanan_m extends CI_Model {
     }
   }
 
+  public function get_by_status($status){
+    return $this->db->get_where($this->table, [
+      'status' => $status
+    ])->result_array();
+  }
+
   public function addlay(){
     $data = [
       'jenis_layanan' => $this->input->post('jenis_layanan', true),

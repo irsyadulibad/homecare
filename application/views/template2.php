@@ -1,5 +1,6 @@
 <?php
 $user = $this->fungsi->user_login();
+$status = $user['status'];
 $uri = $this->uri->segment(1);
 ?>
 <!DOCTYPE html>
@@ -75,7 +76,7 @@ $uri = $this->uri->segment(1);
           <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
             <li class="<?= ($uri=="homecare")?'active':''; ?>"><a class="nav-link" href="<?= base_url('homecare'); ?>"><ion-icon name="speedometer" class="mr-4 ml-2"></ion-icon> <span>Dashboard</span></a></li>
-            <?php if($user['status'] == 'admin'): ?>
+            <?php if($status == 'admin'): ?>
               <li class="menu-header">Pengguna</li>
               <li class="nav-item dropdown <?= ($uri=="user")?'active':''; ?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-users"></i><span>Manajemen Data Pengguna</span></a>
@@ -85,7 +86,7 @@ $uri = $this->uri->segment(1);
                 </ul>
               </li>
             <?php endif; ?>
-            <?php if($user['status'] == 'admin'): ?>
+            <?php if($status == 'admin'): ?>
               <li class="menu-header">Obat</li>
               <li class="nav-item dropdown <?= ($uri=="obat")?'active':''; ?>">
                 <a href="#" class="nav-link has-dropdown"><ion-icon name="medkit" class="mr-4 ml-2"></ion-icon><span>Manajemen Obat</span></a>
@@ -96,7 +97,7 @@ $uri = $this->uri->segment(1);
               </li>
             <?php endif; ?>
             <li class="menu-header">Invoices</li>
-            <?php if($user['status'] == 'admin'): ?>
+            <?php if($status == 'admin'): ?>
               <li class="nav-item dropdown <?= ($uri=="layanan")?'active':''; ?>">
                 <a href="#" class="nav-link has-dropdown"><ion-icon name="reorder-four" class="mr-4 ml-2"></ion-icon><span>Manajemen Layanan</span></a>
                 <ul class="dropdown-menu">
@@ -114,14 +115,21 @@ $uri = $this->uri->segment(1);
             <li class="nav-item dropdown <?= ($uri=="pesanan")?'active':''; ?>">
               <a href="#" class="nav-link has-dropdown"><ion-icon name="mail" class="mr-4 ml-2"></ion-icon><span>Pesanan</span></a>
               <ul class="dropdown-menu">
-                <?php if($user['status'] == 'user'): ?>
+                <?php if($status == 'user'): ?>
                   <li><a class="nav-link" href="<?= base_url('cart'); ?>">Tambah Pesanan</a></li>
                 <?php endif; ?>
                 <li><a class="nav-link" href="<?= base_url('pesanan'); ?>">Daftar Pesanan</a></li>
               </ul>
             </li>
-            <?php if($user['status'] == 'medis' || $user['status'] == 'paramedis'): ?>
+            <?php if($status == 'medis' || $status == 'paramedis'): ?>
               <li class="<?= ($uri=="pembayaran")?'active':''; ?>"><a class="nav-link" href="<?= base_url('pembayaran'); ?>"><ion-icon name="reorder-four" class="mr-4 ml-2"></ion-icon> <span>Pembayaran</span></a></li>
+              <li class="nav-item dropdown <?= ($uri=="layanan")?'active':''; ?>">
+              <a href="#" class="nav-link has-dropdown"><ion-icon name="filter" class="mr-4 ml-2"></ion-icon><span>Lainnya</span></a>
+              <ul class="dropdown-menu">
+                <li><a class="nav-link" href="<?= base_url('layanan/add'); ?>">Tambah Layanan</a></li>
+                <li><a class="nav-link" href="<?= base_url('obat'); ?>">Tambah Obat</a></li>
+              </ul>
+            </li>
             <?php endif; ?>
             <li class="<?= ($uri=="riwayat")?'active':''; ?>"><a class="nav-link" href="<?= base_url('riwayat'); ?>"><ion-icon name="sync" class="mr-4 ml-2"></ion-icon> <span>Riwayat</span></a></li>
             <li class="menu-header">Ulasan</li>

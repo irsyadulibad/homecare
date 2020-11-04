@@ -3,7 +3,8 @@ $user = $this->fungsi->get_user($invoice['id_pengguna']);
 $address = $this->fungsi->get_address($user['id_alamat'], 'str');
 $address = explode(',', $address);
 $bJalan = $this->alamat_m->get_biaya_jalan($medis['id_alamat'], $user['id_alamat']);
-$total = $invoice['total'] + $bJalan['biaya'];
+$bJalan = is_null($bJalan) ? 0 : $bJalan['biaya'];
+$total = $invoice['total'] + $bJalan;
 ?>
 <div class="container-fluid">
   <h4>Terima Pesanan <div class="badge badge-sm badge-success">Nomor: <?php echo $invoice['id_invoice'] ?></div></h4>
@@ -49,7 +50,7 @@ $total = $invoice['total'] + $bJalan['biaya'];
       </tr>
       <tr>
         <td colspan="4" align="right">Biaya Jalan</td>
-        <td align="right">Rp. <?= n_format($bJalan['biaya']) ?></td>
+        <td align="right">Rp. <?= n_format($bJalan) ?></td>
       </tr>
       <tr>
         <td colspan="4" align="right">Grand Total</td>

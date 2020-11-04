@@ -22,6 +22,17 @@ function check_admin(){
     redirect('homecare');
   }
 }
+
+function check_admin_medis(){
+  $ci =& get_instance();
+  $ci->load->library('fungsi');
+
+  $user = $ci->fungsi->user_login();
+  if($user['status'] != 'admin' && $user['status'] != 'medis' && $user['status'] != 'paramedis'){
+    redirect('homecare');
+  }
+}
+
 function check_user(){
   $ci =& get_instance();
   $ci->load->library('fungsi');

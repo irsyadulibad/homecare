@@ -6,25 +6,41 @@ class Layanan extends CI_Controller {
 		parent::__construct();
 		$this->load->model('layanan_m');
 		check_not_login();
-		check_admin();
+		check_admin_medis();
 		$this->load->library('form_validation');
 	}
 
 	public function index(){
+		$user = $this->fungsi->user_login();
+
+		if($user['status'] == 'admin'){
+			$layanans = $this->layanan_m->get();
+		}else{
+			$layanans = $this->layanan_m->get_by_status($user['status']);
+		}
+
 		$data = [
-			'layanans' => $this->layanan_m->get()
+			'layanans' => $layanans
 		];
 
 		$this->template->load('template2','layanan/jenislayanan', $data);
 	}
 
 	public function add(){
+		$user = $this->fungsi->user_login();
+
 		if(!$this->form_validation->run('validation_layanan')){
 			$data = [
-				'head' => "Tambah Layanan"
+				'head' => "Tambah Layanan",
+				'user' => $user
 			];
 
-			$this->template->load('template2','layanan/tambah_layanan', $data);
+			if($user['status'] == 'admin'){
+				$this->template->load('template2','layanan/tambah_layanan', $data);	
+			}else{
+				$this->template->load('template2', 'layanan/tambah_layanan_medis', $data);
+			}
+			
 		}else{
 			$res = $this->layanan_m->addlay();
 			if($res > 0 ){

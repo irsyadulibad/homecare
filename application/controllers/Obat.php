@@ -5,6 +5,7 @@ class Obat extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		check_not_login();
+		check_admin_medis();
 		$this->load->model('obat_m');
 		$this->load->model('layanan_m');
 	}
