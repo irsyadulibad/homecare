@@ -81,6 +81,7 @@ class Invoice extends CI_Controller{
         'pesanans' => $pesanans,
         'medis' => $user,
         'user' => $pasien,
+        'bJalan' => $bJalan,
         'head' => 'Terima Pesanan'
       ];
 
